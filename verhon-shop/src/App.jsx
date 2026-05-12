@@ -1714,7 +1714,7 @@ function Navigation({ scrolled, dark, bagCount, onBag, onHome }) {
         <a className="nav-link" href="#story">Design</a>
         <a className="nav-link" href="#movement">Movement</a>
       </div>
-      <button className="brand" onClick={onHome} aria-label="Zur Startseite">VERHON</button>
+      <button className="brand" onClick={onHome} aria-label="Zur Startseite">VEHON</button>
       <div className="nav-right">
         <a className="nav-link" href="#story">Made in Italy</a>
         <button className="bag-btn" onClick={onBag} aria-label="Warenkorb oeffnen">
@@ -1843,15 +1843,17 @@ function ScrollAnimation() {
     const ctx = canvas.getContext("2d");
 
     function sizeCanvas() {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = canvas.offsetWidth * dpr;
+      canvas.height = canvas.offsetHeight * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
     sizeCanvas();
     window.addEventListener("resize", sizeCanvas);
 
     function drawCover(img) {
-      const cw = canvas.width;
-      const ch = canvas.height;
+      const cw = canvas.offsetWidth;
+      const ch = canvas.offsetHeight;
       const iw = img.naturalWidth;
       const ih = img.naturalHeight;
       const scale = Math.max(cw / iw, ch / ih);
@@ -1875,7 +1877,7 @@ function ScrollAnimation() {
       const img = imagesRef.current[idx];
       if (!img?.complete || lastFrame.current === idx) return;
       lastFrame.current = idx;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
       drawCover(img);
     }
 
