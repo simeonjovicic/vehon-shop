@@ -1,101 +1,121 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const FRAME_COUNT = 165;
 const FRAMES = Array.from({ length: FRAME_COUNT }, (_, i) =>
   `/frames/ezgif-frame-${String(i + 1).padStart(3, "0")}.jpg`,
 );
 
+const MATERIALS = [
+  {
+    id: "velvet-wool",
+    name: "Velvet / Wool",
+    short: "Velvet",
+    category: "velvet",
+    description: "Samtiges Velvet außen, weiche Wolle innen — bonded für Form und Halt.",
+    colors: [
+      { id: "charcoal", name: "Charcoal", hex: "#2c2a2c" },
+      { id: "navy", name: "Navy", hex: "#1f2a45" },
+      { id: "forest", name: "Forest", hex: "#1f3d2e" },
+      { id: "bordeaux", name: "Bordeaux", hex: "#5b1a26" },
+    ],
+  },
+  {
+    id: "eco-suede",
+    name: "Eco Suede",
+    short: "Suede",
+    category: "suede",
+    description: "Vegane Wildleder-Alternative mit feiner, matter Oberfläche.",
+    colors: [
+      { id: "black", name: "Black", hex: "#111111" },
+    ],
+  },
+  {
+    id: "eco-suede-wool",
+    name: "Eco Suede / Wool",
+    short: "Suede + Wool",
+    category: "suede",
+    description: "Eco Suede außen, kuschelige Wolle innen — für kühlere Tage.",
+    colors: [
+      { id: "black", name: "Black", hex: "#161614" },
+    ],
+  },
+  {
+    id: "wool",
+    name: "Wool",
+    short: "Wool",
+    category: "wool",
+    description: "100% Wolle. Warm, atmungsaktiv und natürlich elastisch.",
+    colors: [
+      { id: "anthracite", name: "Anthracite", hex: "#3a3a3c" },
+      { id: "navy", name: "Navy", hex: "#1b2a4a" },
+    ],
+  },
+  {
+    id: "vetech",
+    name: "Vetech / Bonded Lycra",
+    short: "Vetech",
+    category: "vetech",
+    description: "Technisches Stretchmaterial für Strand, Boot und unterwegs.",
+    colors: [
+      { id: "black", name: "Black", hex: "#1a1a1c" },
+      { id: "blue", name: "Blue", hex: "#324f78" },
+      { id: "teal", name: "Teal", hex: "#1f4a4d" },
+      { id: "bordeaux", name: "Bordeaux", hex: "#5b2027" },
+    ],
+  },
+];
+
+const MATERIAL_FILTERS = [
+  ["all", "All"],
+  ["velvet", "Velvet"],
+  ["suede", "Eco Suede"],
+  ["wool", "Wool"],
+  ["vetech", "Vetech"],
+];
+
 const PRODUCTS = [
   {
-    id: 1,
-    name: "WAI Home",
-    subtitle: "Indoor Feel Shoe",
+    id: "mocassino",
+    name: "Mocassino",
+    subtitle: "Italian Soft Loafer",
+    tagline: "Mit Penny-Bar · Indoor & Outdoor",
+    intro:
+      "Der klassische italienische Mokassin. Die dezente Penny-Bar über dem Spann macht ihn zum vielseitigsten Schuh der Kollektion — zuhause, im Hotel, auf dem Boot. Eine Brücke zwischen Komfort und Auftritt.",
+    detailIntro:
+      "Eine Hommage an die italienische Handwerkstradition. Komplett Made in Italy mit sorgsam ausgewählten Materialien für raffinierten Komfort. Vom Wohnraum bis zum Bootsdeck.",
+    price: 189,
+    image: "/wai1_front.jpeg",
+    hoverImage: "/wai1_behind.jpeg",
+    tag: "Made in Italy",
+    sizes: ["39", "40", "41", "42", "43", "44", "45", "46"],
+    materials: MATERIALS,
+    highlights: [
+      "Penny-Bar Detail über dem Spann",
+      "Versatile — Indoor & Outdoor",
+      "Unisex Größen EU 39–46",
+    ],
+  },
+  {
+    id: "pantofola",
+    name: "Pantofola",
+    subtitle: "Italian House Slipper",
+    tagline: "Cleaner Spann · Pure Indoor",
+    intro:
+      "Reduziert, glatt, ohne Schnitt über dem Spann. Der Pantofola ist die Pantoffel-Form in italienischer Handwerksqualität — gemacht für ruhige Räume, weiche Stoffe und Momente, in denen weniger mehr ist.",
+    detailIntro:
+      "Der Pantofola für den Wohnraum. Weiche Linien, warme Materialien — gemacht für Tage zu Hause, ruhige Morgen und entspannte Abende.",
     price: 169,
-    color: "Indigo",
-    material: "IVIVI Barefoot Textile",
-    category: "home",
     image: "/wai_front.jpeg",
     hoverImage: "/wai_behind.jpeg",
-    tag: "Signature",
-    sizes: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45"],
-    description:
-      "Ein leichter Feel Shoe für Zuhause, den Morgen, das Studio und alle Momente dazwischen. Flexibel, atmungsaktiv und so reduziert konstruiert, dass sich der Schuh kaum in den Vordergrund drückt.",
-  },
-  {
-    id: 2,
-    name: "WAI Travel",
-    subtitle: "Packable Loafer",
-    price: 179,
-    color: "Deep Navy",
-    material: "Flexible textile upper",
-    category: "travel",
-    image: "/wai1_front.jpeg",
-    hoverImage: "/wai1_behind.jpeg",
-    tag: "Travel",
-    sizes: ["38", "39", "40", "41", "42", "43", "44", "45"],
-    description:
-      "Gemacht für Wege, Wartezeiten und leichte Routinen unterwegs. Die flexible Konstruktion lässt sich flach verstauen und bleibt trotzdem stabil genug für den ganzen Tag.",
-  },
-  {
-    id: 3,
-    name: "WAI Flex",
-    subtitle: "Barefoot Technology",
-    price: 189,
-    color: "Blue Canvas",
-    material: "IVIVI sole system",
-    category: "tech",
-    image: "/wai2_front.jpeg",
-    hoverImage: "/wai2_behind.jpeg",
-    tag: "Flexible",
-    sizes: ["37", "38", "39", "40", "41", "42", "43", "44"],
-    description:
-      "Die weiche, rollbare Sohle gibt dem Fuß Raum, ohne den Look eines klassischen Slippers zu verlieren. Ein ruhiger Schuh mit technischer Substanz.",
-  },
-  {
-    id: 4,
-    name: "WAI Lounge",
-    subtitle: "Soft Everyday Slip-on",
-    price: 159,
-    color: "Washed Blue",
-    material: "Soft-woven textile",
-    category: "home",
-    image: "/wai3_front.jpeg",
-    hoverImage: "/wai3_behind.jpeg",
-    tag: null,
-    sizes: ["36", "37", "38", "39", "40", "41", "42", "43"],
-    description:
-      "Ein entspannter Slip-on für ruhige Innenräume, kurze Wege und Tage, an denen Komfort selbstverständlich sein soll.",
-  },
-  {
-    id: 5,
-    name: "WAI Studio",
-    subtitle: "Natural Movement",
-    price: 174,
-    color: "Ocean Blue",
-    material: "Breathable upper",
-    category: "tech",
-    image: "/wai2_front.jpeg",
-    hoverImage: "/wai2_behind.jpeg",
-    tag: null,
-    sizes: ["37", "38", "39", "40", "41", "42", "43", "44", "45"],
-    description:
-      "Minimal im Aufbau, weich im Auftritt und präzise dort, wo Halt gebraucht wird. Für Training, Reisen und Alltag mit mehr Bewegungsfreiheit.",
-  },
-  {
-    id: 6,
-    name: "WAI Classic",
-    subtitle: "All-day Feel Shoe",
-    price: 184,
-    color: "Midnight",
-    material: "Flexible sole",
-    category: "travel",
-    image: "/wai1_front.jpeg",
-    hoverImage: "/wai1_behind.jpeg",
-    tag: "New",
-    sizes: ["38", "39", "40", "41", "42", "43", "44", "45"],
-    description:
-      "Der vielseitige WAI Slip-on für Alltag und Wochenende. Clean genug für Reisen, weich genug für Zuhause, belastbar genug für draußen.",
+    tag: "Made in Italy",
+    sizes: ["36", "37", "38", "39", "40", "41", "42", "43", "44"],
+    materials: MATERIALS,
+    highlights: [
+      "Glatter Vamp ohne Penny-Bar",
+      "Pure Indoor — Lounge & Home",
+      "Größen EU 36–44",
+    ],
   },
 ];
 
@@ -110,6 +130,13 @@ const DETAIL_TRANSITION = {
   duration: 0.58,
   ease: [0.22, 1, 0.36, 1],
 };
+
+const COMPARE_CARD_TRANSITION = {
+  duration: 1.05,
+  ease: [0.22, 1, 0.36, 1],
+};
+
+const COMPARE_CARD_VIEWPORT = { once: true, amount: 0.35 };
 
 const DETAIL_VARIANTS = {
   initial: {
@@ -126,6 +153,34 @@ const DETAIL_VARIANTS = {
 };
 
 const MotionDiv = motion.div;
+const MotionA = motion.a;
+
+const LOADER_EXIT_TRANSITION = {
+  duration: 0.45,
+  ease: [0.22, 1, 0.36, 1],
+};
+
+function Loader({ onDone }) {
+  const [morphed, setMorphed] = useState(false);
+
+  useEffect(() => {
+    const morphTimer = window.setTimeout(() => setMorphed(true), 600);
+    const doneTimer = window.setTimeout(() => onDone(), 1450);
+    return () => {
+      window.clearTimeout(morphTimer);
+      window.clearTimeout(doneTimer);
+    };
+  }, [onDone]);
+
+  return (
+    <span
+      className={`loader-morph${morphed ? " is-morphed" : ""}`}
+      aria-label="Vehon"
+    >
+      V<span className="loader-space" aria-hidden="true">&nbsp;</span>e<span className="loader-t" aria-hidden="true">t</span><span className="loader-space" aria-hidden="true">&nbsp;</span>hon
+    </span>
+  );
+}
 
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
@@ -225,6 +280,10 @@ button { color: inherit; }
   letter-spacing: 0.12em;
   line-height: 1;
   white-space: nowrap;
+}
+.wordmark {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  letter-spacing: 0.12em;
 }
 
 .bag-btn {
@@ -553,6 +612,201 @@ button { color: inherit; }
   border-top: 1px solid var(--line);
   color: var(--muted);
   font-size: 12px;
+}
+
+.silhouette-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-bottom: 88px;
+}
+.compare-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 0;
+  text-decoration: none;
+  color: inherit;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+  will-change: transform, opacity;
+}
+.compare-card:hover {
+  border-color: var(--text);
+  box-shadow: 0 20px 50px rgba(28, 25, 23, 0.08);
+}
+.compare-card:hover .compare-media img {
+  transform: scale(1.04);
+}
+.compare-media img {
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.compare-media {
+  position: relative;
+  background: linear-gradient(180deg, #eee7dc 0%, #d8cdc0 100%);
+  min-height: 320px;
+  overflow: hidden;
+}
+.compare-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.compare-body {
+  padding: 28px 28px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.compare-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.compare-head h3 {
+  margin: 0;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 38px;
+  font-weight: 400;
+  line-height: 1;
+}
+.compare-price {
+  color: var(--muted);
+  font-size: 14px;
+}
+.compare-tagline {
+  margin: 0;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+}
+.compare-intro {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.compare-highlights {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+.compare-highlights li {
+  position: relative;
+  padding-left: 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.compare-highlights li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 8px;
+  height: 1px;
+  background: currentColor;
+}
+.compare-cta {
+  margin-top: 6px;
+  align-self: flex-start;
+  padding-bottom: 4px;
+  border-bottom: 1px solid currentColor;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 12px;
+}
+
+.shop-filters-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 0;
+  margin-bottom: 24px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.shop-filters-bar .eyebrow {
+  margin: 0;
+}
+
+.model-section {
+  margin-top: 72px;
+  scroll-margin-top: calc(var(--nav-h) + 24px);
+}
+.model-section:first-of-type {
+  margin-top: 48px;
+}
+.model-section-head {
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.model-section-eyebrow {
+  margin: 0;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 11px;
+}
+.model-section-title {
+  margin: 0;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 56px;
+  font-weight: 300;
+  line-height: 1;
+}
+.model-section-sub {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+
+.swatch-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.swatch {
+  border: 1px solid rgba(28, 25, 23, 0.18);
+  border-radius: 999px;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.swatch:hover {
+  transform: scale(1.08);
+  border-color: var(--text);
+}
+.swatch--card {
+  width: 16px;
+  height: 16px;
+}
+.swatch--detail {
+  width: 26px;
+  height: 26px;
+}
+.swatch--detail.active {
+  border-color: var(--text);
+  box-shadow: 0 0 0 2px var(--paper), 0 0 0 3px var(--text);
+}
+.swatch-more {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-left: 4px;
 }
 
 .story {
@@ -1112,6 +1366,97 @@ button { color: inherit; }
   color: var(--muted);
 }
 
+.etymology {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 40px;
+  padding: 40px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.etymology-morph {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 64px;
+  line-height: 1;
+  color: var(--text);
+  display: inline-flex;
+  align-items: baseline;
+  cursor: default;
+  outline: none;
+}
+.etymology-space,
+.etymology-t {
+  display: inline-block;
+  overflow: hidden;
+  white-space: pre;
+  max-width: 0.6em;
+  opacity: 1;
+  transition:
+    max-width 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.45s ease;
+}
+.etymology-morph:hover .etymology-space,
+.etymology-morph:focus .etymology-space,
+.etymology-morph:hover .etymology-t,
+.etymology-morph:focus .etymology-t {
+  max-width: 0;
+  opacity: 0;
+}
+.etymology-hint {
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--bg);
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.loader-morph {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(72px, 14vw, 160px);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: baseline;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: loader-enter 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.08s forwards;
+}
+.loader-space,
+.loader-t {
+  display: inline-block;
+  overflow: hidden;
+  white-space: pre;
+  max-width: 0.6em;
+  opacity: 1;
+  transition:
+    max-width 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.35s ease;
+}
+.loader-morph.is-morphed .loader-space,
+.loader-morph.is-morphed .loader-t {
+  max-width: 0;
+  opacity: 0;
+}
+@keyframes loader-enter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .info-cta {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -1185,6 +1530,13 @@ button { color: inherit; }
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: 42px;
   letter-spacing: 0.12em;
+}
+.footer-motto {
+  margin: 0 0 18px;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--muted);
 }
 
 .footer p {
@@ -1353,6 +1705,15 @@ button { color: inherit; }
   object-fit: cover;
   object-position: center center;
 }
+.detail-color-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+  transition: background 0.3s ease;
+  z-index: 1;
+}
 
 .detail-panel {
   min-height: 0;
@@ -1410,6 +1771,65 @@ button { color: inherit; }
   text-transform: uppercase;
   letter-spacing: 0.13em;
   font-size: 12px;
+}
+.picker {
+  margin-bottom: clamp(18px, 2.6vh, 26px);
+}
+.picker-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  font-size: 11px;
+}
+.picker-value {
+  color: var(--text);
+  letter-spacing: 0.06em;
+  text-transform: none;
+  font-size: 13px;
+}
+.material-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+.material-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.material-chip:hover {
+  border-color: var(--line-strong);
+}
+.material-chip.active {
+  border-color: var(--text);
+  background: rgba(28, 25, 23, 0.04);
+}
+.material-chip-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1px solid rgba(28, 25, 23, 0.18);
+  flex-shrink: 0;
+}
+.material-chip-label {
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+.color-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 .sizes {
   display: flex;
@@ -1479,6 +1899,23 @@ button { color: inherit; }
   .section h2 { font-size: 44px; }
   .filters { justify-content: flex-start; }
   .shop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .silhouette-compare {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 56px;
+  }
+  .compare-card { grid-template-columns: 1fr; }
+  .compare-media { min-height: 260px; }
+  .compare-body { padding: 22px; }
+  .compare-head h3 { font-size: 32px; }
+  .shop-filters-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 20px 0;
+  }
+  .model-section { margin-top: 48px; }
+  .model-section-title { font-size: 42px; }
   .story-layout { grid-template-columns: 1fr; }
   .story-copy { max-width: 650px; }
   .banner { padding: 28px 20px; min-height: 430px; }
@@ -1591,8 +2028,20 @@ export default function App() {
   const [bagOpen, setBagOpen] = useState(false);
   const [filter, setFilter] = useState("all");
   const [activeProduct, setActiveProduct] = useState(null);
+  const [selectedMaterial, setSelectedMaterial] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
   const [scrolled, setScrolled] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!loading) return undefined;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [loading]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 48);
@@ -1601,7 +2050,17 @@ export default function App() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  function openProduct(productId) {
+  function openProduct(productId, materialId, colorId) {
+    const target = PRODUCTS.find((item) => item.id === productId);
+    if (!target) return;
+    const material = materialId
+      ? target.materials.find((m) => m.id === materialId) || target.materials[0]
+      : target.materials[0];
+    const color = colorId
+      ? material.colors.find((c) => c.id === colorId) || material.colors[0]
+      : material.colors[0];
+    setSelectedMaterial(material.id);
+    setSelectedColor(color.id);
     setSelectedSize("");
     setActiveProduct(productId);
   }
@@ -1612,10 +2071,20 @@ export default function App() {
   }
 
   const product = activeProduct ? PRODUCTS.find((item) => item.id === activeProduct) : null;
-  const filteredProducts = useMemo(
-    () => (filter === "all" ? PRODUCTS : PRODUCTS.filter((item) => item.category === filter)),
-    [filter],
-  );
+  const activeMaterial = product
+    ? product.materials.find((m) => m.id === selectedMaterial) || product.materials[0]
+    : null;
+  const activeColor = activeMaterial
+    ? activeMaterial.colors.find((c) => c.id === selectedColor) || activeMaterial.colors[0]
+    : null;
+
+  function changeMaterial(materialId) {
+    if (!product) return;
+    const material = product.materials.find((m) => m.id === materialId);
+    if (!material) return;
+    setSelectedMaterial(material.id);
+    setSelectedColor(material.colors[0].id);
+  }
   const bagCount = bag.reduce((sum, item) => sum + item.qty, 0);
   const bagTotal = bag.reduce((sum, item) => {
     const match = PRODUCTS.find((p) => p.id === item.productId);
@@ -1631,13 +2100,19 @@ export default function App() {
     };
   }, [product]);
 
-  function addToBag(productId, size) {
+  function addToBag(productId, materialId, colorId, size) {
     setBag((current) => {
-      const found = current.findIndex((item) => item.productId === productId && item.size === size);
+      const found = current.findIndex(
+        (item) =>
+          item.productId === productId &&
+          item.materialId === materialId &&
+          item.colorId === colorId &&
+          item.size === size,
+      );
       if (found >= 0) {
         return current.map((item, index) => (index === found ? { ...item, qty: item.qty + 1 } : item));
       }
-      return [...current, { productId, size, qty: 1 }];
+      return [...current, { productId, materialId, colorId, size, qty: 1 }];
     });
     setBagOpen(true);
   }
@@ -1660,14 +2135,10 @@ export default function App() {
       <main>
         <Hero />
         <Shop
-          products={filteredProducts}
+          products={PRODUCTS}
           filter={filter}
           setFilter={setFilter}
           onOpen={openProduct}
-          onQuickAdd={(productId) => {
-            const quickProduct = PRODUCTS.find((item) => item.id === productId);
-            addToBag(productId, quickProduct.sizes[Math.floor(quickProduct.sizes.length / 2)]);
-          }}
         />
         <ScrollAnimation />
         <InfoSections />
@@ -1675,7 +2146,7 @@ export default function App() {
       </main>
 
       <AnimatePresence initial={false}>
-        {product && (
+        {product && activeMaterial && activeColor && (
           <MotionDiv
             className="product-overlay"
             key={product.id}
@@ -1686,10 +2157,16 @@ export default function App() {
           >
             <ProductDetail
               product={product}
+              activeMaterial={activeMaterial}
+              activeColor={activeColor}
               selectedSize={selectedSize}
-              setSelectedSize={setSelectedSize}
+              onMaterialChange={changeMaterial}
+              onColorChange={(colorId) => setSelectedColor(colorId)}
+              onSizeChange={setSelectedSize}
               onBack={closeProduct}
-              onAdd={() => selectedSize && addToBag(product.id, selectedSize)}
+              onAdd={() =>
+                selectedSize && addToBag(product.id, activeMaterial.id, activeColor.id, selectedSize)
+              }
             />
           </MotionDiv>
         )}
@@ -1702,6 +2179,19 @@ export default function App() {
         onRemove={removeFromBag}
         total={bagTotal}
       />
+
+      <AnimatePresence>
+        {loading && (
+          <MotionDiv
+            className="loader"
+            key="loader"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: LOADER_EXIT_TRANSITION }}
+          >
+            <Loader onDone={() => setLoading(false)} />
+          </MotionDiv>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -1729,22 +2219,25 @@ function Navigation({ scrolled, dark, bagCount, onBag, onHome }) {
 function Hero() {
   return (
     <section className="hero">
-      <img className="hero-bg" src="/wai4-opt.jpeg" alt="WAI Feel Shoe in einer ruhigen Interior-Szene" />
+      <img className="hero-bg" src="/wai4-opt.jpeg" alt="Vehon Mokassin in einer ruhigen Interior-Szene" />
       <div className="hero-content">
         <div className="hero-copy">
-          <p className="eyebrow">Feel shoes for natural movement</p>
-          <h1>Natural freedom, refined.</h1>
+          <p className="eyebrow"><span className="wordmark">Vehon</span> · Vol. 01 · Made in Italy</p>
+          <h1><em>Vis et honor.</em></h1>
           <p className="hero-text">
-            WAI verbindet den Komfort eines Hausschuhs mit der Ruhe eines reduzierten Loafers:
-            leicht, flexibel und gemacht für Wege drinnen, draußen und unterwegs.
+            Forza e onore — Stärke und Ehre. Ein lateinischer Leitsatz der römischen Legionäre, übersetzt
+            in zwei italienische Schuh-Silhouetten. Der <strong>Mocassino</strong> für draußen, der
+            <strong> Pantofola</strong> für drinnen — beide aus den feinsten Materialien, von Cashmere
+            und Velvet bis zur technischen Lycra.
           </p>
           <div className="hero-actions">
             <a className="primary-btn" href="#shop">Shop Collection</a>
-            <a className="secondary-btn" href="#story">Discover WAI</a>
+            <a className="secondary-btn" href="#story">The Vehon story</a>
           </div>
         </div>
         <p className="hero-proof">
-          IVIVI Barefoot Technology, textile Struktur und eine flexible Sohle, die den Fuß arbeiten lässt.
+          Komplett Made in Italy. Cashmere · Velvet · Wolle · Eco Suede · Vetech.
+          Eine Schuh-Familie mit zwei Gesichtern — Komfort und Würde, in jeder Bewegung.
         </p>
       </div>
     </section>
@@ -1752,28 +2245,64 @@ function Hero() {
 }
 
 
-function Shop({ products, filter, setFilter, onOpen, onQuickAdd }) {
-  const filters = [
-    ["all", "All"],
-    ["home", "Home"],
-    ["travel", "Travel"],
-    ["tech", "Flex"],
-  ];
-
+function Shop({ products, filter, setFilter, onOpen }) {
   return (
     <section className="section" id="shop">
       <div className="section-inner">
         <div className="section-head">
           <div>
-            <p className="eyebrow">WAI Collection</p>
-            <h2>Clean shapes. Real comfort.</h2>
+            <p className="eyebrow">Vehon Collection</p>
+            <h2>Two silhouettes.<br />One Italian craft.</h2>
             <p className="section-note">
-              Der Shop setzt die Produktbilder größer, klarer und ruhiger ein. Kein lauter Katalog,
-              sondern eine kompakte Auswahl mit Fokus auf Material, Bewegung und Alltag.
+              Vehon ist auf zwei Schuh-Formen reduziert: der <strong>Mocassino</strong> mit
+              klassischer Penny-Bar als vielseitiger Begleiter, und der <strong>Pantofola</strong>
+              mit cleanem Spann als reiner Indoor-Schuh. Beide aus den gleichen, sorgsam
+              ausgewählten Materialien gefertigt — komplett Made in Italy.
             </p>
           </div>
-          <div className="filters" role="tablist" aria-label="Produkte filtern">
-            {filters.map(([key, label]) => (
+        </div>
+
+        <div className="silhouette-compare">
+          {products.map((product, idx) => {
+            const fromLeft = idx === 0;
+            return (
+              <MotionA
+                className="compare-card"
+                key={product.id}
+                href={`#shop-${product.id}`}
+                initial={{ x: fromLeft ? -120 : 120, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                viewport={COMPARE_CARD_VIEWPORT}
+                transition={{ ...COMPARE_CARD_TRANSITION, delay: idx * 0.12 }}
+              >
+                <div className="compare-media">
+                  <img src={product.image} alt={product.name} />
+                </div>
+                <div className="compare-body">
+                  <div className="compare-head">
+                    <h3>{product.name}</h3>
+                    <span className="compare-price">EUR {product.price}</span>
+                  </div>
+                  <p className="compare-tagline">{product.tagline}</p>
+                  <p className="compare-intro">{product.intro}</p>
+                  <ul className="compare-highlights">
+                    {product.highlights.map((line) => (
+                      <li key={line}>{line}</li>
+                    ))}
+                  </ul>
+                  <span className="compare-cta">
+                    Discover {product.name} <span aria-hidden="true">→</span>
+                  </span>
+                </div>
+              </MotionA>
+            );
+          })}
+        </div>
+
+        <div className="shop-filters-bar">
+          <p className="eyebrow">Browse by material</p>
+          <div className="filters" role="tablist" aria-label="Nach Material filtern">
+            {MATERIAL_FILTERS.map(([key, label]) => (
               <button
                 className={`filter${filter === key ? " active" : ""}`}
                 key={key}
@@ -1786,46 +2315,72 @@ function Shop({ products, filter, setFilter, onOpen, onQuickAdd }) {
           </div>
         </div>
 
-        <div className="shop-grid">
-          {products.map((product, index) => (
-            <article
-              className="product-card"
-              key={product.id}
-              onClick={() => onOpen(product.id)}
-              style={{ animationDelay: `${index * 70}ms` }}
-            >
-              <div className="product-media">
-                {product.tag && <span className="product-tag">{product.tag}</span>}
-                <img className="main-img" src={product.image} alt={product.name} />
-                <img className="hover-img" src={product.hoverImage} alt="" aria-hidden="true" />
-                <button
-                  className="quick-add"
-                  type="button"
-                  aria-label={`${product.name} schnell in den Warenkorb legen`}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    onQuickAdd(product.id);
-                  }}
-                >
-                  +
-                </button>
+        {products.map((product, productIdx) => {
+          const visibleMaterials =
+            filter === "all"
+              ? product.materials
+              : product.materials.filter((material) => material.category === filter);
+          if (visibleMaterials.length === 0) return null;
+
+          return (
+            <div className="model-section" id={`shop-${product.id}`} key={product.id}>
+              <div className="model-section-head">
+                <p className="model-section-eyebrow">0{productIdx + 1} / {product.name}</p>
+                <h3 className="model-section-title">{product.name}</h3>
+                <p className="model-section-sub">{product.tagline}</p>
               </div>
-              <div className="product-info">
-                <div className="product-title-row">
-                  <div>
-                    <h3 className="product-name">{product.name}</h3>
-                    <p className="product-sub">{product.subtitle} · {product.color}</p>
-                  </div>
-                  <span className="price">EUR {product.price}</span>
-                </div>
-                <div className="product-meta">
-                  <span>{product.material}</span>
-                  <span>EU {product.sizes[0]}-{product.sizes[product.sizes.length - 1]}</span>
-                </div>
+
+              <div className="shop-grid">
+                {visibleMaterials.map((material, idx) => (
+                  <article
+                    className="product-card"
+                    key={`${product.id}-${material.id}`}
+                    onClick={() => onOpen(product.id, material.id)}
+                    style={{ animationDelay: `${idx * 60}ms` }}
+                  >
+                    <div className="product-media">
+                      {product.tag && <span className="product-tag">{product.tag}</span>}
+                      <img className="main-img" src={product.image} alt={`${product.name} in ${material.name}`} />
+                      <img className="hover-img" src={product.hoverImage} alt="" aria-hidden="true" />
+                    </div>
+                    <div className="product-info">
+                      <div className="product-title-row">
+                        <div>
+                          <h3 className="product-name">{product.name}</h3>
+                          <p className="product-sub">{material.name}</p>
+                        </div>
+                        <span className="price">EUR {product.price}</span>
+                      </div>
+                      <div className="swatch-row" aria-label={`Verfügbare Farben für ${product.name} in ${material.name}`}>
+                        {material.colors.map((color) => (
+                          <button
+                            key={color.id}
+                            type="button"
+                            className="swatch swatch--card"
+                            style={{ background: color.hex }}
+                            aria-label={color.name}
+                            title={color.name}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              onOpen(product.id, material.id, color.id);
+                            }}
+                          />
+                        ))}
+                        <span className="swatch-more">
+                          {material.colors.length} {material.colors.length === 1 ? "color" : "colors"}
+                        </span>
+                      </div>
+                      <div className="product-meta">
+                        <span>{material.description.split(" — ")[0]}</span>
+                        <span>EU {product.sizes[0]}–{product.sizes[product.sizes.length - 1]}</span>
+                      </div>
+                    </div>
+                  </article>
+                ))}
               </div>
-            </article>
-          ))}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
@@ -1916,13 +2471,13 @@ function ScrollAnimation() {
       <div className="scroll-anim-sticky">
         <canvas ref={canvasRef} className="scroll-anim-canvas" />
         <div className="scroll-anim-info">
-          <p className="eyebrow">WAI Feel Shoe</p>
-          <h3>Built for natural movement.</h3>
-          <p>Flexible Sohle, textile Struktur und ein Gewicht, das man kaum spürt.</p>
+          <p className="eyebrow"><span className="wordmark">Vehon</span> Mocassino</p>
+          <h3>Italian craft, in motion.</h3>
+          <p>Eine Sohle, sorgsam in Italien gefertigt. Materialien, die jeden Schritt begleiten.</p>
         </div>
         <div className="scroll-anim-label">
-          <p>IVIVI Barefoot Technology</p>
-          <h2>Engineered<br />for motion.</h2>
+          <p>Made in Italy · Vis et honor</p>
+          <h2>Forza<br />e onore.</h2>
         </div>
       </div>
     </div>
@@ -1934,65 +2489,58 @@ const INFO_BLOCKS = [
     num: "01",
     tone: "tone-sand",
     plateMeta: "Plate I",
-    plateMark: "Sole",
-    eyebrow: "Foundation",
-    tag: "Barefoot Flex",
-    heading: "A sole that thinks with the foot.",
-    body: "Our IVIVI Barefoot system rolls with each step instead of dictating it — hand-measured in Florence, direct-injected in a single piece. The result feels closer to skin than to footwear.",
-    quote: "“A shoe is only good when you forget you’re wearing it.”",
+    plateMark: "Origin",
+    eyebrow: "Vis et honor",
+    tag: "Latin roots",
+    heading: "Forza e onore. Strength and honor.",
+    body: "Vehon nimmt seinen Namen aus dem lateinischen „Vis et honor“ — Stärke und Ehre. Eine Devise der römischen Legionäre und Gladiatoren, ein strenger Ehrenkodex aus Mut, Wert, Loyalität und Würde. Wir tragen ihn nicht in der Hand, sondern unter dem Fuß.",
+    quote: "“V et hon · V & hon · V + hon → VEHON”",
     specs: [
-      ["Sole", "IVIVI Barefoot Flex"],
-      ["Drop", "0 mm"],
-      ["Weight", "from 180 g"],
-      ["Build", "Direct injection"],
+      ["Etymology", "Vis et honor"],
+      ["Meaning", "Force & honor"],
+      ["Heritage", "Roman virtue"],
+      ["Volume", "Vol. 01"],
     ],
   },
   {
     num: "02",
     tone: "tone-navy",
     plateMeta: "Plate II",
-    plateMark: "Form",
-    eyebrow: "Construction",
-    tag: "Packable",
-    heading: "Folded down. Ready anywhere.",
-    body: "Seamless construction, soft-set materials and a footprint that collapses flat — engineered for the carry-on, the studio, the long weekend. Light enough to forget, structured enough to trust.",
-    quote: "“Travel means becoming lighter — even in your shoes.”",
+    plateMark: "Craft",
+    eyebrow: "Made in Italy",
+    tag: "Italian atelier",
+    heading: "Materials chosen, not assembled.",
+    body: "Jeder Vehon wird komplett in Italien gefertigt. Wir setzen edle Texturen wie Cashmere, Velvet und Wolle direkt neben technisch funktionale Stoffe wie Vetech und Bonded Lycra — Luxus und Praktikabilität in einem Schuh. Die Sohle: eine eigens entwickelte Form, gemacht für Halt, Leichtigkeit und Ruhe.",
+    quote: "“Equilibrio tra tradizione artigianale e design contemporaneo.”",
     specs: [
-      ["Format", "Folds flat"],
-      ["Stitch", "Seamless"],
-      ["Care", "Hand wash, 30°"],
-      ["Packaging", "100% recycled"],
+      ["Origin", "Made in Italy"],
+      ["Upper", "Cashmere · Velvet · Wool"],
+      ["Tech", "Vetech · Bonded Lycra"],
+      ["Sole", "Custom moulded"],
     ],
   },
   {
     num: "03",
     tone: "tone-clay",
     plateMeta: "Plate III",
-    plateMark: "Silhouette",
-    eyebrow: "Restraint",
-    tag: "Quiet design",
-    heading: "Less shoe. More stance.",
-    body: "Reduced lines, textile surfaces, no loud logos. A silhouette that holds its own in any room — and on any street. Built in Italy, designed to disappear into the rest of what you wear.",
-    quote: "“Elegance begins where volume ends.”",
+    plateMark: "Form",
+    eyebrow: "Two silhouettes",
+    tag: "Indoor & out",
+    heading: "From the home to the harbor.",
+    body: "Der Mocassino mit Penny-Bar trägt dich vom Wohnraum aufs Boot, an den Strand, durch den Tag. Der Pantofola mit cleanem Spann hält die Ruhe von Cashmere-Decken und Marmorböden. Ein Material — zwei Charaktere. Eine Familie, gemacht für jede Stunde des Tages.",
+    quote: "“Una scarpa versatile, capace di unire lusso e praticità.”",
     specs: [
-      ["Design", "Minimal slip-on"],
-      ["Palette", "Earth tones"],
-      ["Textile", "Italian woven"],
-      ["Origin", "Made in Italy"],
+      ["Mocassino", "Indoor & Outdoor"],
+      ["Pantofola", "Indoor only"],
+      ["Style", "Italian loafer"],
+      ["Sizes", "EU 36–46"],
     ],
   },
 ];
 
 function InfoSections() {
   const [activeInfoIndex, setActiveInfoIndex] = useState(0);
-  const activeInfoIndexRef = useRef(0);
-  const storyRef = useRef(null);
-  const snapLockRef = useRef(false);
   const stepRefs = useRef([]);
-
-  useEffect(() => {
-    activeInfoIndexRef.current = activeInfoIndex;
-  }, [activeInfoIndex]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -2018,73 +2566,33 @@ function InfoSections() {
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    function handleWheel(event) {
-      if (window.innerWidth <= 980 || snapLockRef.current || Math.abs(event.deltaY) < 24) return;
-
-      const story = storyRef.current;
-      if (!story) return;
-
-      const rect = story.getBoundingClientRect();
-      const storyIsActive = rect.top < window.innerHeight * 0.72 && rect.bottom > window.innerHeight * 0.28;
-      if (!storyIsActive) return;
-
-      const direction = event.deltaY > 0 ? 1 : -1;
-      const anchor = 112;
-      const stepPositions = stepRefs.current
-        .map((step, index) => (step ? { index, distance: Math.abs(step.getBoundingClientRect().top - anchor) } : null))
-        .filter(Boolean);
-      const nearest = stepPositions.sort((a, b) => a.distance - b.distance)[0];
-      const currentIndex = nearest?.index ?? activeInfoIndexRef.current;
-      const currentIsAligned = (nearest?.distance ?? 0) < 72;
-      const nextIndex = currentIsAligned ? currentIndex + direction : currentIndex;
-
-      if (nextIndex < 0 || nextIndex >= INFO_BLOCKS.length) return;
-
-      const nextStep = stepRefs.current[nextIndex];
-      if (!nextStep) return;
-
-      event.preventDefault();
-      snapLockRef.current = true;
-      const top = nextStep.getBoundingClientRect().top + window.scrollY - anchor;
-      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
-
-      window.setTimeout(() => {
-        snapLockRef.current = false;
-      }, 760);
-    }
-
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    return () => window.removeEventListener("wheel", handleWheel);
-  }, []);
-
   return (
     <section className="info" id="movement">
       <div className="info-marquee">
-        <strong>The WAI Index</strong>
+        <strong className="wordmark">Vehon</strong>
         <span className="dot" />
-        <span>Sole</span>
+        <span>Vis et honor</span>
+        <span className="dot" />
+        <span>Origin</span>
+        <span className="dot" />
+        <span>Craft</span>
         <span className="dot" />
         <span>Form</span>
         <span className="dot" />
-        <span>Silhouette</span>
-        <span className="dot" />
-        <span>Manifesto</span>
-        <span className="dot" />
-        <strong>Vol. 01 — 2026</strong>
+        <strong>Vol. 01 — Made in Italy</strong>
       </div>
 
-      <div className="info-story" ref={storyRef}>
+      <div className="info-story">
         <aside className="info-story-sticky">
           <div>
-            <p className="eyebrow">The WAI Principles</p>
-            <h2>Three quiet ideas, <em>built into every pair.</em></h2>
+            <p className="eyebrow">The Vehon Index</p>
+            <h2>Three ideas, <em>woven into every pair.</em></h2>
             <p className="info-story-copy">
-              We don’t design sneakers. We design feel-shoes — a category that begins with the foot,
-              ends with the silhouette, and passes through everything in between. What follows is the index.
+              Vehon ist auf das Wesentliche reduziert: zwei Schuh-Silhouetten, fünf Materialien, eine
+              lateinische Devise. Was folgt, ist der Index — Ursprung, Handwerk und Form.
             </p>
           </div>
-          <div className="info-progress" aria-label="WAI principles progress">
+          <div className="info-progress" aria-label="Vehon principles progress">
             {INFO_BLOCKS.map((block, index) => (
               <div
                 className={`info-progress-item${activeInfoIndex === index ? " is-active" : ""}`}
@@ -2138,12 +2646,18 @@ function InfoSections() {
 
       <div className="info-manifesto">
         <div className="info-manifesto-inner">
-          <p className="eyebrow">Manifesto</p>
+          <p className="eyebrow">Manifesto · Etymology</p>
           <blockquote>
-            “We build shoes that feel like they were already there — <em>quiet, light,</em>
-            and exactly as much shoe as the day requires.”
+            <em>“Vis et honor”</em> — forza e onore. Eine römische Devise, gemacht für den Marsch
+            der Legionen. Heute getragen unter dem Fuß, in zwei Schuh-Silhouetten Made in Italy.
           </blockquote>
-          <cite>— WAI Studio, Florence</cite>
+          <div className="etymology">
+            <span className="etymology-morph" tabIndex={0} aria-label="V et hon becomes Vehon">
+              V<span className="etymology-space" aria-hidden="true">&nbsp;</span>e<span className="etymology-t" aria-hidden="true">t</span><span className="etymology-space" aria-hidden="true">&nbsp;</span>hon
+            </span>
+            <span className="etymology-hint">— hover</span>
+          </div>
+          <cite>— Vehon Atelier, Italy</cite>
         </div>
       </div>
 
@@ -2156,42 +2670,116 @@ function InfoSections() {
   );
 }
 
-function ProductDetail({ product, selectedSize, setSelectedSize, onBack, onAdd }) {
+function ProductDetail({
+  product,
+  activeMaterial,
+  activeColor,
+  selectedSize,
+  onMaterialChange,
+  onColorChange,
+  onSizeChange,
+  onBack,
+  onAdd,
+}) {
   return (
     <main className="detail">
       <div className="detail-grid">
         <div className="detail-media">
           <img src={product.hoverImage || product.image} alt={product.name} />
+          <div
+            className="detail-color-bar"
+            style={{ background: activeColor.hex }}
+            aria-hidden="true"
+          />
         </div>
         <div className="detail-panel">
           <button className="back" type="button" onClick={onBack}>
             <span aria-hidden="true">←</span>
             Back to shop
           </button>
-          <p className="eyebrow">{product.material}</p>
+          <p className="eyebrow">Vehon · Made in Italy</p>
           <h1>{product.name}</h1>
-          <p className="detail-sub">{product.subtitle} · {product.color}</p>
+          <p className="detail-sub">
+            {product.subtitle} · {activeMaterial.name} · {activeColor.name}
+          </p>
           <div className="detail-price">EUR {product.price}</div>
 
-          <div className="size-label">Select size</div>
-          <div className="sizes">
-            {product.sizes.map((size) => (
-              <button
-                className={`size${selectedSize === size ? " active" : ""}`}
-                key={size}
-                type="button"
-                onClick={() => setSelectedSize(size)}
-              >
-                {size}
-              </button>
-            ))}
+          <div className="picker">
+            <div className="picker-label">
+              <span>Material</span>
+              <span className="picker-value">{activeMaterial.name}</span>
+            </div>
+            <div className="material-grid">
+              {product.materials.map((material) => {
+                const isActive = material.id === activeMaterial.id;
+                return (
+                  <button
+                    key={material.id}
+                    type="button"
+                    className={`material-chip${isActive ? " active" : ""}`}
+                    onClick={() => onMaterialChange(material.id)}
+                  >
+                    <span
+                      className="material-chip-swatch"
+                      style={{ background: material.colors[0].hex }}
+                      aria-hidden="true"
+                    />
+                    <span className="material-chip-label">{material.short}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="picker">
+            <div className="picker-label">
+              <span>Color</span>
+              <span className="picker-value">{activeColor.name}</span>
+            </div>
+            <div className="color-row">
+              {activeMaterial.colors.map((color) => {
+                const isActive = color.id === activeColor.id;
+                return (
+                  <button
+                    key={color.id}
+                    type="button"
+                    className={`swatch swatch--detail${isActive ? " active" : ""}`}
+                    style={{ background: color.hex }}
+                    aria-label={color.name}
+                    title={color.name}
+                    onClick={() => onColorChange(color.id)}
+                  />
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="picker">
+            <div className="picker-label">
+              <span>Size</span>
+              <span className="picker-value">{selectedSize ? `EU ${selectedSize}` : "—"}</span>
+            </div>
+            <div className="sizes">
+              {product.sizes.map((size) => (
+                <button
+                  className={`size${selectedSize === size ? " active" : ""}`}
+                  key={size}
+                  type="button"
+                  onClick={() => onSizeChange(size)}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
           </div>
 
           <button className="add-to-bag" type="button" disabled={!selectedSize} onClick={onAdd}>
-            Add to Bag
+            {selectedSize ? "Add to Bag" : "Select size"}
           </button>
 
-          <p className="detail-copy">{product.description}</p>
+          <p className="detail-copy">
+            <strong>{activeMaterial.name}.</strong> {activeMaterial.description} {product.detailIntro}
+          </p>
         </div>
       </div>
     </main>
@@ -2214,12 +2802,18 @@ function BagDrawer({ bag, open, onClose, onRemove, total }) {
             bag.map((item, index) => {
               const product = PRODUCTS.find((p) => p.id === item.productId);
               if (!product) return null;
+              const material = product.materials.find((m) => m.id === item.materialId);
+              const color = material?.colors.find((c) => c.id === item.colorId);
+              const key = `${item.productId}-${item.materialId}-${item.colorId}-${item.size}`;
               return (
-                <div className="cart-row" key={`${item.productId}-${item.size}`}>
+                <div className="cart-row" key={key}>
                   <img src={product.image} alt={product.name} />
                   <div>
                     <h3>{product.name}</h3>
-                    <p>Size {item.size} · EUR {product.price} · Qty {item.qty}</p>
+                    <p>
+                      {material?.name}
+                      {color ? ` · ${color.name}` : ""} · EU {item.size} · EUR {product.price} · Qty {item.qty}
+                    </p>
                   </div>
                   <button className="remove" type="button" onClick={() => onRemove(index)} aria-label="Produkt entfernen">×</button>
                 </div>
@@ -2246,13 +2840,14 @@ function Footer() {
     <footer className="footer">
       <div className="footer-inner">
         <div>
-          <p className="footer-brand">WAI</p>
-          <p>Feel Shoes für natürliche Bewegung. Ruhig im Design, leicht am Fuß.</p>
+          <p className="footer-brand">Vehon</p>
+          <p className="footer-motto">Vis et honor — forza e onore.</p>
+          <p>Italienisches Handwerk in zwei Silhouetten. Mocassino & Pantofola. Made in Italy.</p>
         </div>
         <div className="footer-links">
           <a href="#shop">Shop</a>
-          <a href="#story">Design</a>
-          <a href="#movement">Movement</a>
+          <a href="#story">Atelier</a>
+          <a href="#movement">Vis et honor</a>
         </div>
       </div>
     </footer>
