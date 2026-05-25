@@ -131,12 +131,6 @@ const DETAIL_TRANSITION = {
   ease: [0.22, 1, 0.36, 1],
 };
 
-const COMPARE_CARD_TRANSITION = {
-  duration: 1.05,
-  ease: [0.22, 1, 0.36, 1],
-};
-
-const COMPARE_CARD_VIEWPORT = { once: true, amount: 0.35 };
 
 const DETAIL_VARIANTS = {
   initial: {
@@ -153,7 +147,6 @@ const DETAIL_VARIANTS = {
 };
 
 const MotionDiv = motion.div;
-const MotionA = motion.a;
 
 const LOADER_EXIT_TRANSITION = {
   duration: 0.45,
@@ -614,114 +607,154 @@ button { color: inherit; }
   font-size: 12px;
 }
 
-.silhouette-compare {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 28px;
-  margin-bottom: 88px;
+.section-head--centered {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 40px;
 }
-.compare-card {
-  display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: 0;
-  text-decoration: none;
-  color: inherit;
+.section-head--centered > div {
+  max-width: 620px;
+}
+
+.model-switcher {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 56px;
+  padding: 6px;
+  width: fit-content;
   background: var(--paper);
   border: 1px solid var(--line);
+  border-radius: 999px;
+  gap: 4px;
+}
+.model-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 38px;
+  min-width: 200px;
+  border: none;
+  background: transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--text);
+  transition: background 0.45s cubic-bezier(0.22, 1, 0.36, 1), color 0.45s ease;
+}
+.model-tab.active {
+  background: var(--text);
+  color: var(--paper);
+}
+.model-tab-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 24px;
+  line-height: 1;
+}
+.model-tab-sub {
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.model-stage {
+  display: block;
+}
+
+.editorial-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 64px;
+  align-items: stretch;
+  margin-bottom: 72px;
+}
+.editorial-hero-media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: linear-gradient(180deg, #eee7dc 0%, #d8cdc0 100%);
   border-radius: 12px;
   overflow: hidden;
-  transition: border-color 0.35s ease, box-shadow 0.35s ease;
-  will-change: transform, opacity;
+  border: 1px solid var(--line);
 }
-.compare-card:hover {
-  border-color: var(--text);
-  box-shadow: 0 20px 50px rgba(28, 25, 23, 0.08);
-}
-.compare-card:hover .compare-media img {
-  transform: scale(1.04);
-}
-.compare-media img {
-  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.compare-media {
-  position: relative;
-  background: linear-gradient(180deg, #eee7dc 0%, #d8cdc0 100%);
-  min-height: 320px;
-  overflow: hidden;
-}
-.compare-media img {
+.editorial-hero-media img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.compare-body {
-  padding: 28px 28px 26px;
+.editorial-hero-body {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  justify-content: center;
+  padding: 0 4px;
 }
-.compare-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
+.editorial-hero-body .eyebrow {
+  margin: 0 0 16px;
 }
-.compare-head h3 {
-  margin: 0;
+.editorial-hero-body h3 {
+  margin: 0 0 14px;
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 38px;
-  font-weight: 400;
-  line-height: 1;
+  font-size: clamp(54px, 5.4vw, 88px);
+  line-height: 0.96;
+  font-weight: 300;
+  letter-spacing: -0.01em;
 }
-.compare-price {
-  color: var(--muted);
-  font-size: 14px;
-}
-.compare-tagline {
-  margin: 0;
-  color: var(--text);
+.editorial-tagline {
+  margin: 0 0 28px;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   font-size: 11px;
+  color: var(--text);
 }
-.compare-intro {
-  margin: 0;
+.editorial-intro {
+  margin: 0 0 32px;
   color: var(--muted);
-  font-size: 14px;
-  line-height: 1.7;
+  font-size: 16px;
+  line-height: 1.75;
+  max-width: 520px;
 }
-.compare-highlights {
-  margin: 4px 0 0;
-  padding: 0;
+.editorial-highlights {
   list-style: none;
+  padding: 0;
+  margin: 0 0 36px;
   display: grid;
-  gap: 6px;
+  gap: 10px;
 }
-.compare-highlights li {
+.editorial-highlights li {
   position: relative;
-  padding-left: 16px;
-  color: var(--muted);
-  font-size: 13px;
+  padding-left: 22px;
+  color: var(--text);
+  font-size: 14px;
 }
-.compare-highlights li::before {
+.editorial-highlights li::before {
   content: "";
   position: absolute;
   left: 0;
-  top: 9px;
-  width: 8px;
+  top: 10px;
+  width: 12px;
   height: 1px;
-  background: currentColor;
+  background: var(--text);
 }
-.compare-cta {
-  margin-top: 6px;
-  align-self: flex-start;
-  padding-bottom: 4px;
-  border-bottom: 1px solid currentColor;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 12px;
+.editorial-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+  color: var(--muted);
+}
+.editorial-meta strong {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--text);
+}
+.editorial-meta-divider {
+  opacity: 0.4;
 }
 
 .shop-filters-bar {
@@ -729,8 +762,8 @@ button { color: inherit; }
   justify-content: space-between;
   align-items: center;
   gap: 24px;
-  padding: 24px 0;
-  margin-bottom: 24px;
+  padding: 22px 0;
+  margin-bottom: 28px;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
@@ -738,38 +771,13 @@ button { color: inherit; }
   margin: 0;
 }
 
-.model-section {
-  margin-top: 72px;
-  scroll-margin-top: calc(var(--nav-h) + 24px);
-}
-.model-section:first-of-type {
-  margin-top: 48px;
-}
-.model-section-head {
-  margin-bottom: 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.model-section-eyebrow {
-  margin: 0;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-size: 11px;
-}
-.model-section-title {
-  margin: 0;
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 56px;
-  font-weight: 300;
-  line-height: 1;
-}
-.model-section-sub {
-  margin: 0;
-  color: var(--muted);
-  font-size: 14px;
-  letter-spacing: 0.04em;
+.material-stripe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  z-index: 2;
 }
 
 .swatch-row {
@@ -1899,23 +1907,32 @@ button { color: inherit; }
   .section h2 { font-size: 44px; }
   .filters { justify-content: flex-start; }
   .shop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .silhouette-compare {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    margin-bottom: 56px;
+  .model-switcher {
+    width: 100%;
+    margin-bottom: 36px;
+    padding: 5px;
   }
-  .compare-card { grid-template-columns: 1fr; }
-  .compare-media { min-height: 260px; }
-  .compare-body { padding: 22px; }
-  .compare-head h3 { font-size: 32px; }
+  .model-tab {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 14px;
+  }
+  .model-tab-name { font-size: 20px; }
+  .editorial-hero {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 48px;
+  }
+  .editorial-hero-media { aspect-ratio: 4 / 3; }
+  .editorial-hero-body h3 { font-size: 52px; }
+  .editorial-intro { font-size: 15px; }
   .shop-filters-bar {
     flex-direction: column;
     align-items: flex-start;
     gap: 14px;
     padding: 20px 0;
   }
-  .model-section { margin-top: 48px; }
-  .model-section-title { font-size: 42px; }
+  .material-stripe { height: 4px; }
   .story-layout { grid-template-columns: 1fr; }
   .story-copy { max-width: 650px; }
   .banner { padding: 28px 20px; min-height: 430px; }
@@ -2027,6 +2044,7 @@ export default function App() {
   const [bag, setBag] = useState([]);
   const [bagOpen, setBagOpen] = useState(false);
   const [filter, setFilter] = useState("all");
+  const [selectedModel, setSelectedModel] = useState(PRODUCTS[0].id);
   const [activeProduct, setActiveProduct] = useState(null);
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
@@ -2138,6 +2156,11 @@ export default function App() {
           products={PRODUCTS}
           filter={filter}
           setFilter={setFilter}
+          selectedModel={selectedModel}
+          setSelectedModel={(id) => {
+            setSelectedModel(id);
+            setFilter("all");
+          }}
           onOpen={openProduct}
         />
         <ScrollAnimation />
@@ -2245,142 +2268,144 @@ function Hero() {
 }
 
 
-function Shop({ products, filter, setFilter, onOpen }) {
+function Shop({ products, filter, setFilter, selectedModel, setSelectedModel, onOpen }) {
+  const product = products.find((p) => p.id === selectedModel) || products[0];
+  const visibleMaterials =
+    filter === "all"
+      ? product.materials
+      : product.materials.filter((material) => material.category === filter);
+
   return (
     <section className="section" id="shop">
       <div className="section-inner">
-        <div className="section-head">
+        <div className="section-head section-head--centered">
           <div>
-            <p className="eyebrow">Vehon Collection</p>
+            <p className="eyebrow">Vehon · Vol. 01</p>
             <h2>Two silhouettes.<br />One Italian craft.</h2>
             <p className="section-note">
-              Vehon ist auf zwei Schuh-Formen reduziert: der <strong>Mocassino</strong> mit
-              klassischer Penny-Bar als vielseitiger Begleiter, und der <strong>Pantofola</strong>
-              mit cleanem Spann als reiner Indoor-Schuh. Beide aus den gleichen, sorgsam
-              ausgewählten Materialien gefertigt — komplett Made in Italy.
+              Wähle dein Modell — beide aus den gleichen sorgsam ausgewählten Materialien.
+              Komplett Made in Italy.
             </p>
           </div>
         </div>
 
-        <div className="silhouette-compare">
-          {products.map((product, idx) => {
-            const fromLeft = idx === 0;
-            return (
-              <MotionA
-                className="compare-card"
-                key={product.id}
-                href={`#shop-${product.id}`}
-                initial={{ x: fromLeft ? -120 : 120, opacity: 0 }}
-                whileInView={{ x: 0, opacity: 1 }}
-                viewport={COMPARE_CARD_VIEWPORT}
-                transition={{ ...COMPARE_CARD_TRANSITION, delay: idx * 0.12 }}
-              >
-                <div className="compare-media">
-                  <img src={product.image} alt={product.name} />
-                </div>
-                <div className="compare-body">
-                  <div className="compare-head">
-                    <h3>{product.name}</h3>
-                    <span className="compare-price">EUR {product.price}</span>
-                  </div>
-                  <p className="compare-tagline">{product.tagline}</p>
-                  <p className="compare-intro">{product.intro}</p>
-                  <ul className="compare-highlights">
-                    {product.highlights.map((line) => (
-                      <li key={line}>{line}</li>
-                    ))}
-                  </ul>
-                  <span className="compare-cta">
-                    Discover {product.name} <span aria-hidden="true">→</span>
-                  </span>
-                </div>
-              </MotionA>
-            );
-          })}
+        <div className="model-switcher" role="tablist" aria-label="Silhouette wählen">
+          {products.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              role="tab"
+              aria-selected={p.id === selectedModel}
+              className={`model-tab${p.id === selectedModel ? " active" : ""}`}
+              onClick={() => setSelectedModel(p.id)}
+            >
+              <span className="model-tab-name">{p.name}</span>
+              <span className="model-tab-sub">{p.tagline.split(" · ")[0]}</span>
+            </button>
+          ))}
         </div>
 
-        <div className="shop-filters-bar">
-          <p className="eyebrow">Browse by material</p>
-          <div className="filters" role="tablist" aria-label="Nach Material filtern">
-            {MATERIAL_FILTERS.map(([key, label]) => (
-              <button
-                className={`filter${filter === key ? " active" : ""}`}
-                key={key}
-                onClick={() => setFilter(key)}
-                type="button"
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {products.map((product, productIdx) => {
-          const visibleMaterials =
-            filter === "all"
-              ? product.materials
-              : product.materials.filter((material) => material.category === filter);
-          if (visibleMaterials.length === 0) return null;
-
-          return (
-            <div className="model-section" id={`shop-${product.id}`} key={product.id}>
-              <div className="model-section-head">
-                <p className="model-section-eyebrow">0{productIdx + 1} / {product.name}</p>
-                <h3 className="model-section-title">{product.name}</h3>
-                <p className="model-section-sub">{product.tagline}</p>
+        <AnimatePresence mode="wait" initial={false}>
+          <MotionDiv
+            key={product.id}
+            className="model-stage"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="editorial-hero">
+              <div className="editorial-hero-media">
+                {product.tag && <span className="product-tag">{product.tag}</span>}
+                <img src={product.image} alt={product.name} />
               </div>
+              <div className="editorial-hero-body">
+                <p className="eyebrow">{product.subtitle}</p>
+                <h3>{product.name}</h3>
+                <p className="editorial-tagline">{product.tagline}</p>
+                <p className="editorial-intro">{product.intro}</p>
+                <ul className="editorial-highlights">
+                  {product.highlights.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+                <div className="editorial-meta">
+                  <span><strong>EUR {product.price}</strong></span>
+                  <span className="editorial-meta-divider" aria-hidden="true">·</span>
+                  <span>EU {product.sizes[0]}–{product.sizes[product.sizes.length - 1]}</span>
+                  <span className="editorial-meta-divider" aria-hidden="true">·</span>
+                  <span>{product.materials.length} Materialien</span>
+                </div>
+              </div>
+            </div>
 
-              <div className="shop-grid">
-                {visibleMaterials.map((material, idx) => (
-                  <article
-                    className="product-card"
-                    key={`${product.id}-${material.id}`}
-                    onClick={() => onOpen(product.id, material.id)}
-                    style={{ animationDelay: `${idx * 60}ms` }}
+            <div className="shop-filters-bar">
+              <p className="eyebrow">Choose your material</p>
+              <div className="filters" role="tablist" aria-label="Nach Material filtern">
+                {MATERIAL_FILTERS.map(([key, label]) => (
+                  <button
+                    className={`filter${filter === key ? " active" : ""}`}
+                    key={key}
+                    onClick={() => setFilter(key)}
+                    type="button"
                   >
-                    <div className="product-media">
-                      {product.tag && <span className="product-tag">{product.tag}</span>}
-                      <img className="main-img" src={product.image} alt={`${product.name} in ${material.name}`} />
-                      <img className="hover-img" src={product.hoverImage} alt="" aria-hidden="true" />
-                    </div>
-                    <div className="product-info">
-                      <div className="product-title-row">
-                        <div>
-                          <h3 className="product-name">{product.name}</h3>
-                          <p className="product-sub">{material.name}</p>
-                        </div>
-                        <span className="price">EUR {product.price}</span>
-                      </div>
-                      <div className="swatch-row" aria-label={`Verfügbare Farben für ${product.name} in ${material.name}`}>
-                        {material.colors.map((color) => (
-                          <button
-                            key={color.id}
-                            type="button"
-                            className="swatch swatch--card"
-                            style={{ background: color.hex }}
-                            aria-label={color.name}
-                            title={color.name}
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              onOpen(product.id, material.id, color.id);
-                            }}
-                          />
-                        ))}
-                        <span className="swatch-more">
-                          {material.colors.length} {material.colors.length === 1 ? "color" : "colors"}
-                        </span>
-                      </div>
-                      <div className="product-meta">
-                        <span>{material.description.split(" — ")[0]}</span>
-                        <span>EU {product.sizes[0]}–{product.sizes[product.sizes.length - 1]}</span>
-                      </div>
-                    </div>
-                  </article>
+                    {label}
+                  </button>
                 ))}
               </div>
             </div>
-          );
-        })}
+
+            <div className="shop-grid">
+              {visibleMaterials.map((material, idx) => (
+                <article
+                  className="product-card"
+                  key={`${product.id}-${material.id}`}
+                  onClick={() => onOpen(product.id, material.id)}
+                  style={{ animationDelay: `${idx * 60}ms` }}
+                >
+                  <div className="product-media">
+                    {product.tag && <span className="product-tag">{product.tag}</span>}
+                    <span
+                      className="material-stripe"
+                      style={{ background: material.colors[0].hex }}
+                      aria-hidden="true"
+                    />
+                    <img className="main-img" src={product.image} alt={`${product.name} in ${material.name}`} />
+                    <img className="hover-img" src={product.hoverImage} alt="" aria-hidden="true" />
+                  </div>
+                  <div className="product-info">
+                    <div className="product-title-row">
+                      <div>
+                        <h3 className="product-name">{material.name}</h3>
+                        <p className="product-sub">{material.description.split(" — ")[0]}</p>
+                      </div>
+                      <span className="price">EUR {product.price}</span>
+                    </div>
+                    <div className="swatch-row" aria-label={`Verfügbare Farben für ${material.name}`}>
+                      {material.colors.map((color) => (
+                        <button
+                          key={color.id}
+                          type="button"
+                          className="swatch swatch--card"
+                          style={{ background: color.hex }}
+                          aria-label={color.name}
+                          title={color.name}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            onOpen(product.id, material.id, color.id);
+                          }}
+                        />
+                      ))}
+                      <span className="swatch-more">
+                        {material.colors.length} {material.colors.length === 1 ? "color" : "colors"}
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </MotionDiv>
+        </AnimatePresence>
       </div>
     </section>
   );
