@@ -1968,7 +1968,11 @@ button { color: inherit; }
   }
   .info-cta-text { font-size: 30px; }
   .info-cta-link { justify-self: center; }
-  .scroll-anim-label { left: 20px; bottom: 32px; }
+  .scroll-anim { height: 300vh; margin-top: calc(var(--nav-h) + 56px); }
+  .scroll-anim-info { left: 20px; right: 20px; }
+  .scroll-anim-info h3 { font-size: 34px; max-width: none; }
+  .scroll-anim-info p { font-size: 13px; max-width: none; }
+  .scroll-anim-label { left: 20px; right: 20px; bottom: 32px; }
   .scroll-anim-label h2 { font-size: 36px; }
   .footer-inner { grid-template-columns: 1fr; }
   .detail {
@@ -2025,13 +2029,162 @@ button { color: inherit; }
   .hero-proof { display: none; }
   .hero-actions { align-items: stretch; }
   .primary-btn, .secondary-btn { width: 100%; }
-  .shop-grid { grid-template-columns: 1fr; }
+  .shop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .product-card { min-height: auto; }
-  .product-media { height: 330px; }
+  .product-media { height: 220px; }
+  .product-info { gap: 12px; padding: 14px; }
+  .product-name { font-size: 22px; }
+  .product-sub { font-size: 12px; }
+  .product-meta { padding-top: 12px; font-size: 11px; }
+  .quick-add { width: 36px; height: 36px; font-size: 20px; right: 10px; bottom: 10px; }
   .story-images { grid-template-columns: 1fr; }
   .story-image.small { margin-bottom: 0; }
   .footer-links { flex-direction: column; gap: 12px; }
   .detail-panel h1 { font-size: 48px; }
+}
+
+/* =========================================================
+   MOBILE REDESIGN — everything below the sticky scroll
+   (story index, numbered steps, manifesto, CTA, footer)
+   Phone-only, leaves desktop/tablet untouched.
+   ========================================================= */
+@media (max-width: 640px) {
+  /* ---- Marquee → centered, wrapping ticker ---- */
+  .info-marquee {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 9px 13px;
+    padding: 16px 20px;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+  }
+
+  /* ---- Story: drop the 2-col sticky layout, stack cleanly ---- */
+  .info-story {
+    display: block;
+    padding: 52px 20px 4px;
+    border-bottom: 0;
+  }
+  .info-story-sticky {
+    position: static;
+    min-height: 0;
+    margin-bottom: 8px;
+  }
+  .info-story-sticky::before { margin-bottom: 20px; font-size: 12px; }
+  .info-story .eyebrow { margin-bottom: 16px; }
+  .info-story h2 { font-size: 34px; line-height: 1.0; margin-bottom: 16px; }
+  .info-story-copy { font-size: 15px; line-height: 1.72; max-width: none; }
+
+  /* progress list → 3 compact pill-chips */
+  .info-progress {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 26px 0 0;
+  }
+  .info-progress-item {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 5px;
+    padding: 13px 8px;
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    text-align: center;
+    opacity: 1;
+    letter-spacing: 0.14em;
+  }
+  .info-progress-item::before { display: none; }
+  .info-progress-item.is-active {
+    background: var(--text);
+    color: var(--paper);
+    border-color: var(--text);
+  }
+
+  /* ---- Numbered steps → self-contained cards ---- */
+  .info-steps {
+    display: grid;
+    gap: 18px;
+    padding: 30px 20px 8px;
+  }
+  .info-step {
+    display: block;
+    min-height: 0;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--paper);
+  }
+  .info-step:last-child { border-bottom: 1px solid var(--line); }
+
+  /* coloured banner header with the big numeral bleeding out */
+  .info-block-plate {
+    aspect-ratio: auto;
+    max-height: none;
+    height: 124px;
+    width: 100%;
+    padding: 0;
+  }
+  .info-block-plate-arc { display: none; }
+  .info-block-plate-meta { top: 16px; left: 18px; }
+  .info-block-plate-mark { bottom: 14px; left: 18px; right: auto; }
+  .info-block-numeral {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 150px;
+    line-height: 1;
+    opacity: 0.9;
+    clip-path: none;
+  }
+  /* keep the numeral centred even on the active card (overrides desktop reveal) */
+  .info-step.is-active .info-block-numeral {
+    transform: translateY(-50%);
+    clip-path: none;
+    opacity: 0.9;
+  }
+
+  /* copy body */
+  .info-block-copy { padding: 24px 20px 26px; }
+  .info-block-copy .info-marker { margin-bottom: 18px; }
+  .info-block-copy h3 { font-size: 27px; line-height: 1.08; margin-bottom: 16px; }
+  .info-block-copy > p { font-size: 15px; line-height: 1.72; margin-bottom: 22px; }
+  .info-quote {
+    font-size: 18px;
+    line-height: 1.35;
+    margin-bottom: 24px;
+    padding: 2px 0 2px 16px;
+  }
+  .info-specs { grid-template-columns: 1fr; max-width: none; }
+  .info-spec {
+    padding: 13px 0;
+    padding-right: 0;
+  }
+  .info-spec:nth-child(odd) { border-right: 0; padding-left: 0; }
+  .info-spec:nth-child(even) { padding-left: 0; }
+
+  /* ---- Manifesto + etymology ---- */
+  .info-manifesto { padding: 68px 20px 60px; }
+  .info-manifesto .eyebrow { margin-bottom: 26px; }
+  .info-manifesto blockquote {
+    font-size: 25px;
+    line-height: 1.32;
+    margin-bottom: 34px;
+  }
+  .etymology { padding: 26px 0; margin-bottom: 26px; }
+  .etymology-morph { font-size: 42px; }
+  .etymology-hint { display: none; }
+
+  /* ---- CTA ---- */
+  .info-cta { padding: 44px 20px; gap: 20px; }
+  .info-cta-eyebrow { text-align: center; }
+  .info-cta-text { font-size: 26px; }
+  .info-cta-link { width: 100%; justify-content: center; }
+
+  /* ---- Footer ---- */
+  .footer { padding: 44px 20px 34px; }
+  .footer-inner { gap: 26px; }
+  .footer-brand { font-size: 34px; }
 }
 `;
 
@@ -2333,6 +2486,8 @@ function ScrollAnimation() {
       canvas.width = canvas.offsetWidth * dpr;
       canvas.height = canvas.offsetHeight * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      // force a redraw after resize (fit-mode may have changed)
+      lastFrame.current = -1;
     }
     sizeCanvas();
     window.addEventListener("resize", sizeCanvas);
@@ -2342,7 +2497,13 @@ function ScrollAnimation() {
       const ch = canvas.offsetHeight;
       const iw = img.naturalWidth;
       const ih = img.naturalHeight;
-      const scale = Math.max(cw / iw, ch / ih);
+      // On narrow / portrait viewports the 16:9 frames would be cropped to a
+      // thin centre strip with "cover". Fall back to "contain" so the whole
+      // frame stays visible (letterboxed top/bottom).
+      const contain = window.innerWidth <= 980;
+      const scale = contain
+        ? Math.min(cw / iw, ch / ih)
+        : Math.max(cw / iw, ch / ih);
       const dw = iw * scale;
       const dh = ih * scale;
       const dx = (cw - dw) / 2;
@@ -2407,8 +2568,8 @@ function ScrollAnimation() {
           <p>Eine Sohle, sorgsam in Italien gefertigt. Materialien, die jeden Schritt begleiten.</p>
         </div>
         <div className="scroll-anim-label">
-          <p>Made in Italy · Vis et honor</p>
-          <h2>Forza<br />e onore.</h2>
+          <p>Made in Italy · By hand</p>
+          <h2>Made<br />to move.</h2>
         </div>
       </div>
     </div>
@@ -2421,15 +2582,15 @@ const INFO_BLOCKS = [
     tone: "tone-sand",
     plateMeta: "Plate I",
     plateMark: "Origin",
-    eyebrow: "Vis et honor",
-    tag: "Latin roots",
-    heading: "Forza e onore. Strength and honor.",
-    body: "Vehon nimmt seinen Namen aus dem lateinischen „Vis et honor“ — Stärke und Ehre. Eine Devise der römischen Legionäre und Gladiatoren, ein strenger Ehrenkodex aus Mut, Wert, Loyalität und Würde. Wir tragen ihn nicht in der Hand, sondern unter dem Fuß.",
-    quote: "“V et hon · V & hon · V + hon → VEHON”",
+    eyebrow: "Made in Italy",
+    tag: "Origin",
+    heading: "Made by hand, in Italy.",
+    body: "Jeder Vehon entsteht komplett in Italien — in den Händen erfahrener Schuhmacher, Schritt für Schritt. Keine Massenfertigung, sondern Geduld, Erfahrung und ein Auge für Material. Was zählt, trägt man nicht zur Schau, sondern unter dem Fuß.",
+    quote: "“Hergestellt, nicht zusammengesetzt.”",
     specs: [
-      ["Etymology", "Vis et honor"],
-      ["Meaning", "Force & honor"],
-      ["Heritage", "Roman virtue"],
+      ["Atelier", "Italy"],
+      ["Method", "Hand-finished"],
+      ["Approach", "Slow craft"],
       ["Volume", "Vol. 01"],
     ],
   },
@@ -2442,7 +2603,7 @@ const INFO_BLOCKS = [
     tag: "Italian atelier",
     heading: "Materials chosen, not assembled.",
     body: "Jeder Vehon wird komplett in Italien gefertigt. Wir setzen edle Texturen wie Cashmere, Velvet und Wolle direkt neben technisch funktionale Stoffe wie Vetech und Bonded Lycra — Luxus und Praktikabilität in einem Schuh. Die Sohle: eine eigens entwickelte Form, gemacht für Halt, Leichtigkeit und Ruhe.",
-    quote: "“Equilibrio tra tradizione artigianale e design contemporaneo.”",
+    quote: "“Balance zwischen Handwerk und modernem Design.”",
     specs: [
       ["Origin", "Made in Italy"],
       ["Upper", "Cashmere · Velvet · Wool"],
@@ -2459,7 +2620,7 @@ const INFO_BLOCKS = [
     tag: "Indoor & out",
     heading: "From the home to the harbor.",
     body: "Der Mocassino mit Penny-Bar trägt dich vom Wohnraum aufs Boot, an den Strand, durch den Tag. Der Pantofola mit cleanem Spann hält die Ruhe von Cashmere-Decken und Marmorböden. Ein Material — zwei Charaktere. Eine Familie, gemacht für jede Stunde des Tages.",
-    quote: "“Una scarpa versatile, capace di unire lusso e praticità.”",
+    quote: "“Ein Schuh, zwei Charaktere — Komfort und Würde.”",
     specs: [
       ["Mocassino", "Indoor & Outdoor"],
       ["Pantofola", "Indoor only"],
@@ -2502,7 +2663,7 @@ function InfoSections() {
       <div className="info-marquee">
         <strong className="wordmark">Vehon</strong>
         <span className="dot" />
-        <span>Vis et honor</span>
+        <span>Made by hand</span>
         <span className="dot" />
         <span>Origin</span>
         <span className="dot" />
@@ -2519,8 +2680,8 @@ function InfoSections() {
             <p className="eyebrow">The Vehon Index</p>
             <h2>Three ideas, <em>woven into every pair.</em></h2>
             <p className="info-story-copy">
-              Vehon ist auf das Wesentliche reduziert: zwei Schuh-Silhouetten, fünf Materialien, eine
-              lateinische Devise. Was folgt, ist der Index — Ursprung, Handwerk und Form.
+              Vehon ist auf das Wesentliche reduziert: zwei Schuh-Silhouetten, fünf Materialien, ein
+              Anspruch. Was folgt, ist der Index — Ursprung, Handwerk und Form.
             </p>
           </div>
           <div className="info-progress" aria-label="Vehon principles progress">
@@ -2577,17 +2738,12 @@ function InfoSections() {
 
       <div className="info-manifesto">
         <div className="info-manifesto-inner">
-          <p className="eyebrow">Manifesto · Etymology</p>
+          <p className="eyebrow">Manifesto · Made in Italy</p>
           <blockquote>
-            <em>“Vis et honor”</em> — forza e onore. Eine römische Devise, gemacht für den Marsch
-            der Legionen. Heute getragen unter dem Fuß, in zwei Schuh-Silhouetten Made in Italy.
+            <em>„Im Stillen gemacht.“</em> Zwei Schuh-Silhouetten, komplett in Italien gefertigt — aus
+            feinsten Materialien, mit der Hand vollendet. Kein lautes Statement, sondern Substanz, die
+            man unter dem Fuß trägt.
           </blockquote>
-          <div className="etymology">
-            <span className="etymology-morph" tabIndex={0} aria-label="V et hon becomes Vehon">
-              V<span className="etymology-space" aria-hidden="true">&nbsp;</span>e<span className="etymology-t" aria-hidden="true">t</span><span className="etymology-space" aria-hidden="true">&nbsp;</span>hon
-            </span>
-            <span className="etymology-hint">— hover</span>
-          </div>
           <cite>— Vehon Atelier, Italy</cite>
         </div>
       </div>
@@ -2698,13 +2854,13 @@ function Footer() {
       <div className="footer-inner">
         <div>
           <p className="footer-brand">Vehon</p>
-          <p className="footer-motto">Vis et honor — forza e onore.</p>
+          <p className="footer-motto">Made in Italy — leise getragen.</p>
           <p>Italienisches Handwerk in zwei Silhouetten. Mocassino & Pantofola. Made in Italy.</p>
         </div>
         <div className="footer-links">
           <a href="#shop">Shop</a>
           <a href="#story">Atelier</a>
-          <a href="#movement">Vis et honor</a>
+          <a href="#movement">The Index</a>
         </div>
       </div>
     </footer>
