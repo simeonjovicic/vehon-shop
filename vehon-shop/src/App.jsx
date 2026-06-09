@@ -298,6 +298,11 @@ button { color: inherit; }
   inset: 0;
   width: 100%;
   height: 100%;
+}
+
+.hero-bg img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: 60% center;
   animation: slowZoom 14s ease-out both;
@@ -1878,10 +1883,10 @@ button { color: inherit; }
   .nav-right { gap: 12px; }
   .nav-right .nav-link { display: none; }
   .hero {
-    min-height: 86svh;
+    min-height: 100svh;
     padding: 108px 22px 34px;
   }
-  .hero-bg { object-position: 67% center; }
+  .hero-bg img { object-position: center center; }
   .hero::after {
     background: linear-gradient(90deg, rgba(20, 17, 14, 0.82), rgba(20, 17, 14, 0.34));
   }
@@ -1969,10 +1974,34 @@ button { color: inherit; }
   .info-cta-text { font-size: 30px; }
   .info-cta-link { justify-self: center; }
   .scroll-anim { height: 300vh; margin-top: calc(var(--nav-h) + 56px); }
-  .scroll-anim-info { left: 20px; right: 20px; }
-  .scroll-anim-info h3 { font-size: 34px; max-width: none; }
+  .scroll-anim-sticky {
+    display: flex;
+    flex-direction: column;
+  }
+  .scroll-anim-info {
+    position: relative;
+    inset: auto;
+    top: auto; left: auto; right: auto;
+    padding: 24px 20px 12px;
+    flex: 0 0 auto;
+  }
+  .scroll-anim-info h3 { font-size: 30px; max-width: none; margin-bottom: 10px; }
   .scroll-anim-info p { font-size: 13px; max-width: none; }
-  .scroll-anim-label { left: 20px; right: 20px; bottom: 32px; }
+  .scroll-anim-canvas {
+    position: relative;
+    inset: auto;
+    flex: 1 1 auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+  }
+  .scroll-anim-label {
+    position: relative;
+    inset: auto;
+    bottom: auto; left: auto; right: auto;
+    padding: 14px 20px 28px;
+    flex: 0 0 auto;
+  }
   .scroll-anim-label h2 { font-size: 36px; }
   .footer-inner { grid-template-columns: 1fr; }
   .detail {
@@ -2075,37 +2104,25 @@ button { color: inherit; }
   .info-story h2 { font-size: 34px; line-height: 1.0; margin-bottom: 16px; }
   .info-story-copy { font-size: 15px; line-height: 1.72; max-width: none; }
 
-  /* progress list → 3 compact pill-chips */
-  .info-progress {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin: 26px 0 0;
-  }
-  .info-progress-item {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 5px;
-    padding: 13px 8px;
-    border: 1px solid var(--line);
-    border-radius: 13px;
-    text-align: center;
-    opacity: 1;
-    letter-spacing: 0.14em;
-  }
-  .info-progress-item::before { display: none; }
-  .info-progress-item.is-active {
-    background: var(--text);
-    color: var(--paper);
-    border-color: var(--text);
-  }
+  /* progress chips hidden on mobile — carousel swipe is the navigation */
+  .info-progress { display: none; }
 
-  /* ---- Numbered steps → self-contained cards ---- */
+  /* ---- Numbered steps → swipeable horizontal carousel ---- */
   .info-steps {
-    display: grid;
-    gap: 18px;
-    padding: 30px 20px 8px;
+    display: flex;
+    gap: 14px;
+    padding: 26px 20px 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 20px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
+  .info-steps::-webkit-scrollbar { display: none; }
   .info-step {
+    flex: 0 0 86%;
+    scroll-snap-align: center;
     display: block;
     min-height: 0;
     padding: 0;
@@ -2113,26 +2130,33 @@ button { color: inherit; }
     border-radius: 18px;
     overflow: hidden;
     background: var(--paper);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: scale(0.96);
+    opacity: 0.72;
+  }
+  .info-step.is-active {
+    transform: scale(1);
+    opacity: 1;
   }
   .info-step:last-child { border-bottom: 1px solid var(--line); }
 
-  /* coloured banner header with the big numeral bleeding out */
+  /* coloured banner header — shorter, numeral sized to fit */
   .info-block-plate {
     aspect-ratio: auto;
     max-height: none;
-    height: 124px;
+    height: 104px;
     width: 100%;
     padding: 0;
   }
   .info-block-plate-arc { display: none; }
-  .info-block-plate-meta { top: 16px; left: 18px; }
-  .info-block-plate-mark { bottom: 14px; left: 18px; right: auto; }
+  .info-block-plate-meta { top: 12px; left: 16px; font-size: 10px; }
+  .info-block-plate-mark { bottom: 10px; left: 16px; right: auto; font-size: 10px; }
   .info-block-numeral {
     position: absolute;
-    right: 14px;
+    right: 18px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 150px;
+    font-size: 78px;
     line-height: 1;
     opacity: 0.9;
     clip-path: none;
@@ -2144,24 +2168,21 @@ button { color: inherit; }
     opacity: 0.9;
   }
 
-  /* copy body */
-  .info-block-copy { padding: 24px 20px 26px; }
-  .info-block-copy .info-marker { margin-bottom: 18px; }
-  .info-block-copy h3 { font-size: 27px; line-height: 1.08; margin-bottom: 16px; }
-  .info-block-copy > p { font-size: 15px; line-height: 1.72; margin-bottom: 22px; }
-  .info-quote {
-    font-size: 18px;
-    line-height: 1.35;
-    margin-bottom: 24px;
-    padding: 2px 0 2px 16px;
+  /* copy body — tighter padding, smaller type, hide long quote/specs */
+  .info-block-copy { padding: 18px 18px 20px; }
+  .info-block-copy .info-marker { margin-bottom: 12px; }
+  .info-block-copy h3 { font-size: 22px; line-height: 1.1; margin-bottom: 10px; }
+  .info-block-copy > p {
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin-bottom: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
-  .info-specs { grid-template-columns: 1fr; max-width: none; }
-  .info-spec {
-    padding: 13px 0;
-    padding-right: 0;
-  }
-  .info-spec:nth-child(odd) { border-right: 0; padding-left: 0; }
-  .info-spec:nth-child(even) { padding-left: 0; }
+  .info-quote { display: none; }
+  .info-specs { display: none; }
 
   /* ---- Manifesto + etymology ---- */
   .info-manifesto { padding: 68px 20px 60px; }
@@ -2354,11 +2375,13 @@ function Navigation({ scrolled, dark, bagCount, onBag, onHome }) {
 function Hero() {
   return (
     <section className="hero">
-      <img
-        className="hero-bg"
-        src="/wai4-opt.jpeg"
-        alt="Vehon Mokassin in einer ruhigen Interior-Szene"
-      />
+      <picture className="hero-bg">
+        <source media="(max-width: 640px)" srcSet="/mobile-hero.png" />
+        <img
+          src="/wai4-opt.jpeg"
+          alt="Vehon Mokassin in einer ruhigen Interior-Szene"
+        />
+      </picture>
       <div className="hero-content">
         <div className="hero-copy">
           <p className="eyebrow">
@@ -2497,9 +2520,8 @@ function ScrollAnimation() {
       const ch = canvas.offsetHeight;
       const iw = img.naturalWidth;
       const ih = img.naturalHeight;
-      // On narrow / portrait viewports the 16:9 frames would be cropped to a
-      // thin centre strip with "cover". Fall back to "contain" so the whole
-      // frame stays visible (letterboxed top/bottom).
+      // Narrow / portrait viewports: contain so the whole 16:9 frame stays
+      // visible at proper scale. Wider viewports: cover for a full-bleed look.
       const contain = window.innerWidth <= 980;
       const scale = contain
         ? Math.min(cw / iw, ch / ih)
@@ -2633,6 +2655,7 @@ const INFO_BLOCKS = [
 function InfoSections() {
   const [activeInfoIndex, setActiveInfoIndex] = useState(0);
   const stepRefs = useRef([]);
+  const stepsRef = useRef(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -2657,6 +2680,40 @@ function InfoSections() {
 
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    const container = stepsRef.current;
+    if (!container) return undefined;
+    const mq = window.matchMedia("(max-width: 640px)");
+
+    function onScroll() {
+      if (!mq.matches) return;
+      const containerRect = container.getBoundingClientRect();
+      const centerX = containerRect.left + containerRect.width / 2;
+      let closest = 0;
+      let closestDist = Infinity;
+      stepRefs.current.forEach((step, i) => {
+        if (!step) return;
+        const rect = step.getBoundingClientRect();
+        const stepCenter = rect.left + rect.width / 2;
+        const dist = Math.abs(stepCenter - centerX);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closest = i;
+        }
+      });
+      setActiveInfoIndex(closest);
+    }
+
+    container.addEventListener("scroll", onScroll, { passive: true });
+    return () => container.removeEventListener("scroll", onScroll);
+  }, []);
+
+  function scrollToStep(i) {
+    const target = stepRefs.current[i];
+    if (!target) return;
+    target.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  }
 
   return (
     <section className="info" id="movement">
@@ -2686,18 +2743,20 @@ function InfoSections() {
           </div>
           <div className="info-progress" aria-label="Vehon principles progress">
             {INFO_BLOCKS.map((block, index) => (
-              <div
+              <button
+                type="button"
                 className={`info-progress-item${activeInfoIndex === index ? " is-active" : ""}`}
                 key={block.num}
+                onClick={() => scrollToStep(index)}
               >
                 <span className="info-progress-num">{block.num}</span>
                 <span>{block.plateMark}</span>
-              </div>
+              </button>
             ))}
           </div>
         </aside>
 
-        <div className="info-steps">
+        <div className="info-steps" ref={stepsRef}>
           {INFO_BLOCKS.map((block, i) => (
             <article
               className={`info-step${activeInfoIndex === i ? " is-active" : ""}`}
