@@ -1,121 +1,101 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const FRAME_COUNT = 165;
 const FRAMES = Array.from({ length: FRAME_COUNT }, (_, i) =>
   `/frames/ezgif-frame-${String(i + 1).padStart(3, "0")}.jpg`,
 );
 
-const MATERIALS = [
-  {
-    id: "velvet-wool",
-    name: "Velvet / Wool",
-    short: "Velvet",
-    category: "velvet",
-    description: "Samtiges Velvet außen, weiche Wolle innen — bonded für Form und Halt.",
-    colors: [
-      { id: "charcoal", name: "Charcoal", hex: "#2c2a2c" },
-      { id: "navy", name: "Navy", hex: "#1f2a45" },
-      { id: "forest", name: "Forest", hex: "#1f3d2e" },
-      { id: "bordeaux", name: "Bordeaux", hex: "#5b1a26" },
-    ],
-  },
-  {
-    id: "eco-suede",
-    name: "Eco Suede",
-    short: "Suede",
-    category: "suede",
-    description: "Vegane Wildleder-Alternative mit feiner, matter Oberfläche.",
-    colors: [
-      { id: "black", name: "Black", hex: "#111111" },
-    ],
-  },
-  {
-    id: "eco-suede-wool",
-    name: "Eco Suede / Wool",
-    short: "Suede + Wool",
-    category: "suede",
-    description: "Eco Suede außen, kuschelige Wolle innen — für kühlere Tage.",
-    colors: [
-      { id: "black", name: "Black", hex: "#161614" },
-    ],
-  },
-  {
-    id: "wool",
-    name: "Wool",
-    short: "Wool",
-    category: "wool",
-    description: "100% Wolle. Warm, atmungsaktiv und natürlich elastisch.",
-    colors: [
-      { id: "anthracite", name: "Anthracite", hex: "#3a3a3c" },
-      { id: "navy", name: "Navy", hex: "#1b2a4a" },
-    ],
-  },
-  {
-    id: "vetech",
-    name: "Vetech / Bonded Lycra",
-    short: "Vetech",
-    category: "vetech",
-    description: "Technisches Stretchmaterial für Strand, Boot und unterwegs.",
-    colors: [
-      { id: "black", name: "Black", hex: "#1a1a1c" },
-      { id: "blue", name: "Blue", hex: "#324f78" },
-      { id: "teal", name: "Teal", hex: "#1f4a4d" },
-      { id: "bordeaux", name: "Bordeaux", hex: "#5b2027" },
-    ],
-  },
-];
-
-const MATERIAL_FILTERS = [
-  ["all", "All"],
-  ["velvet", "Velvet"],
-  ["suede", "Eco Suede"],
-  ["wool", "Wool"],
-  ["vetech", "Vetech"],
-];
-
 const PRODUCTS = [
   {
-    id: "mocassino",
-    name: "Mocassino",
-    subtitle: "Italian Soft Loafer",
-    tagline: "Mit Penny-Bar · Indoor & Outdoor",
-    intro:
-      "Der klassische italienische Mokassin. Die dezente Penny-Bar über dem Spann macht ihn zum vielseitigsten Schuh der Kollektion — zuhause, im Hotel, auf dem Boot. Eine Brücke zwischen Komfort und Auftritt.",
-    detailIntro:
-      "Eine Hommage an die italienische Handwerkstradition. Komplett Made in Italy mit sorgsam ausgewählten Materialien für raffinierten Komfort. Vom Wohnraum bis zum Bootsdeck.",
-    price: 189,
-    image: "/wai1_front.jpeg",
-    hoverImage: "/wai1_behind.jpeg",
-    tag: "Made in Italy",
-    sizes: ["39", "40", "41", "42", "43", "44", "45", "46"],
-    materials: MATERIALS,
-    highlights: [
-      "Penny-Bar Detail über dem Spann",
-      "Versatile — Indoor & Outdoor",
-      "Unisex Größen EU 39–46",
-    ],
-  },
-  {
-    id: "pantofola",
-    name: "Pantofola",
-    subtitle: "Italian House Slipper",
-    tagline: "Cleaner Spann · Pure Indoor",
-    intro:
-      "Reduziert, glatt, ohne Schnitt über dem Spann. Der Pantofola ist die Pantoffel-Form in italienischer Handwerksqualität — gemacht für ruhige Räume, weiche Stoffe und Momente, in denen weniger mehr ist.",
-    detailIntro:
-      "Der Pantofola für den Wohnraum. Weiche Linien, warme Materialien — gemacht für Tage zu Hause, ruhige Morgen und entspannte Abende.",
+    id: 1,
+    name: "WAI Home",
+    subtitle: "Indoor Feel Shoe",
     price: 169,
+    color: "Indigo",
+    material: "IVIVI Barefoot Textile",
+    category: "home",
     image: "/wai_front.jpeg",
     hoverImage: "/wai_behind.jpeg",
-    tag: "Made in Italy",
-    sizes: ["36", "37", "38", "39", "40", "41", "42", "43", "44"],
-    materials: MATERIALS,
-    highlights: [
-      "Glatter Vamp ohne Penny-Bar",
-      "Pure Indoor — Lounge & Home",
-      "Größen EU 36–44",
-    ],
+    tag: "Signature",
+    sizes: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45"],
+    description:
+      "Ein leichter Feel Shoe für Zuhause, den Morgen, das Studio und alle Momente dazwischen. Flexibel, atmungsaktiv und so reduziert konstruiert, dass sich der Schuh kaum in den Vordergrund drückt.",
+  },
+  {
+    id: 2,
+    name: "WAI Travel",
+    subtitle: "Packable Loafer",
+    price: 179,
+    color: "Deep Navy",
+    material: "Flexible textile upper",
+    category: "travel",
+    image: "/wai1_front.jpeg",
+    hoverImage: "/wai1_behind.jpeg",
+    tag: "Travel",
+    sizes: ["38", "39", "40", "41", "42", "43", "44", "45"],
+    description:
+      "Gemacht für Wege, Wartezeiten und leichte Routinen unterwegs. Die flexible Konstruktion lässt sich flach verstauen und bleibt trotzdem stabil genug für den ganzen Tag.",
+  },
+  {
+    id: 3,
+    name: "WAI Flex",
+    subtitle: "Barefoot Technology",
+    price: 189,
+    color: "Blue Canvas",
+    material: "IVIVI sole system",
+    category: "tech",
+    image: "/wai2_front.jpeg",
+    hoverImage: "/wai2_behind.jpeg",
+    tag: "Flexible",
+    sizes: ["37", "38", "39", "40", "41", "42", "43", "44"],
+    description:
+      "Die weiche, rollbare Sohle gibt dem Fuß Raum, ohne den Look eines klassischen Slippers zu verlieren. Ein ruhiger Schuh mit technischer Substanz.",
+  },
+  {
+    id: 4,
+    name: "WAI Lounge",
+    subtitle: "Soft Everyday Slip-on",
+    price: 159,
+    color: "Washed Blue",
+    material: "Soft-woven textile",
+    category: "home",
+    image: "/wai3_front.jpeg",
+    hoverImage: "/wai3_behind.jpeg",
+    tag: null,
+    sizes: ["36", "37", "38", "39", "40", "41", "42", "43"],
+    description:
+      "Ein entspannter Slip-on für ruhige Innenräume, kurze Wege und Tage, an denen Komfort selbstverständlich sein soll.",
+  },
+  {
+    id: 5,
+    name: "WAI Studio",
+    subtitle: "Natural Movement",
+    price: 174,
+    color: "Ocean Blue",
+    material: "Breathable upper",
+    category: "tech",
+    image: "/wai2_front.jpeg",
+    hoverImage: "/wai2_behind.jpeg",
+    tag: null,
+    sizes: ["37", "38", "39", "40", "41", "42", "43", "44", "45"],
+    description:
+      "Minimal im Aufbau, weich im Auftritt und präzise dort, wo Halt gebraucht wird. Für Training, Reisen und Alltag mit mehr Bewegungsfreiheit.",
+  },
+  {
+    id: 6,
+    name: "WAI Classic",
+    subtitle: "All-day Feel Shoe",
+    price: 184,
+    color: "Midnight",
+    material: "Flexible sole",
+    category: "travel",
+    image: "/wai1_front.jpeg",
+    hoverImage: "/wai1_behind.jpeg",
+    tag: "New",
+    sizes: ["38", "39", "40", "41", "42", "43", "44", "45"],
+    description:
+      "Der vielseitige WAI Slip-on für Alltag und Wochenende. Clean genug für Reisen, weich genug für Zuhause, belastbar genug für draußen.",
   },
 ];
 
@@ -673,17 +653,23 @@ button { color: inherit; }
 .editorial-hero-media {
   position: relative;
   aspect-ratio: 4 / 5;
-  background: linear-gradient(180deg, #eee7dc 0%, #d8cdc0 100%);
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 4px;
+  background: var(--line);
 }
-.editorial-hero-media img {
-  position: absolute;
-  inset: 0;
+.mosaic-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+}
+.mosaic-img--main {
+  grid-row: 1 / 3;
 }
 .editorial-hero-body {
   display: flex;
@@ -2027,7 +2013,16 @@ button { color: inherit; }
   }
   .bag-label { display: none; }
   .hero h1 { font-size: 46px; }
-  .hero-text { font-size: 15px; }
+  .hero-text {
+    font-size: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    opacity: 0.72;
+    margin-top: 14px;
+  }
+  .hero-proof { display: none; }
   .hero-actions { align-items: stretch; }
   .primary-btn, .secondary-btn { width: 100%; }
   .shop-grid { grid-template-columns: 1fr; }
@@ -2044,10 +2039,7 @@ export default function App() {
   const [bag, setBag] = useState([]);
   const [bagOpen, setBagOpen] = useState(false);
   const [filter, setFilter] = useState("all");
-  const [selectedModel, setSelectedModel] = useState(PRODUCTS[0].id);
   const [activeProduct, setActiveProduct] = useState(null);
-  const [selectedMaterial, setSelectedMaterial] = useState(null);
-  const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
   const [scrolled, setScrolled] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -2068,17 +2060,7 @@ export default function App() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  function openProduct(productId, materialId, colorId) {
-    const target = PRODUCTS.find((item) => item.id === productId);
-    if (!target) return;
-    const material = materialId
-      ? target.materials.find((m) => m.id === materialId) || target.materials[0]
-      : target.materials[0];
-    const color = colorId
-      ? material.colors.find((c) => c.id === colorId) || material.colors[0]
-      : material.colors[0];
-    setSelectedMaterial(material.id);
-    setSelectedColor(color.id);
+  function openProduct(productId) {
     setSelectedSize("");
     setActiveProduct(productId);
   }
@@ -2089,20 +2071,10 @@ export default function App() {
   }
 
   const product = activeProduct ? PRODUCTS.find((item) => item.id === activeProduct) : null;
-  const activeMaterial = product
-    ? product.materials.find((m) => m.id === selectedMaterial) || product.materials[0]
-    : null;
-  const activeColor = activeMaterial
-    ? activeMaterial.colors.find((c) => c.id === selectedColor) || activeMaterial.colors[0]
-    : null;
-
-  function changeMaterial(materialId) {
-    if (!product) return;
-    const material = product.materials.find((m) => m.id === materialId);
-    if (!material) return;
-    setSelectedMaterial(material.id);
-    setSelectedColor(material.colors[0].id);
-  }
+  const filteredProducts = useMemo(
+    () => (filter === "all" ? PRODUCTS : PRODUCTS.filter((item) => item.category === filter)),
+    [filter],
+  );
   const bagCount = bag.reduce((sum, item) => sum + item.qty, 0);
   const bagTotal = bag.reduce((sum, item) => {
     const match = PRODUCTS.find((p) => p.id === item.productId);
@@ -2118,19 +2090,13 @@ export default function App() {
     };
   }, [product]);
 
-  function addToBag(productId, materialId, colorId, size) {
+  function addToBag(productId, size) {
     setBag((current) => {
-      const found = current.findIndex(
-        (item) =>
-          item.productId === productId &&
-          item.materialId === materialId &&
-          item.colorId === colorId &&
-          item.size === size,
-      );
+      const found = current.findIndex((item) => item.productId === productId && item.size === size);
       if (found >= 0) {
         return current.map((item, index) => (index === found ? { ...item, qty: item.qty + 1 } : item));
       }
-      return [...current, { productId, materialId, colorId, size, qty: 1 }];
+      return [...current, { productId, size, qty: 1 }];
     });
     setBagOpen(true);
   }
@@ -2153,15 +2119,14 @@ export default function App() {
       <main>
         <Hero />
         <Shop
-          products={PRODUCTS}
+          products={filteredProducts}
           filter={filter}
           setFilter={setFilter}
-          selectedModel={selectedModel}
-          setSelectedModel={(id) => {
-            setSelectedModel(id);
-            setFilter("all");
-          }}
           onOpen={openProduct}
+          onQuickAdd={(productId) => {
+            const quickProduct = PRODUCTS.find((item) => item.id === productId);
+            addToBag(productId, quickProduct.sizes[Math.floor(quickProduct.sizes.length / 2)]);
+          }}
         />
         <ScrollAnimation />
         <InfoSections />
@@ -2169,7 +2134,7 @@ export default function App() {
       </main>
 
       <AnimatePresence initial={false}>
-        {product && activeMaterial && activeColor && (
+        {product && (
           <MotionDiv
             className="product-overlay"
             key={product.id}
@@ -2180,16 +2145,10 @@ export default function App() {
           >
             <ProductDetail
               product={product}
-              activeMaterial={activeMaterial}
-              activeColor={activeColor}
               selectedSize={selectedSize}
-              onMaterialChange={changeMaterial}
-              onColorChange={(colorId) => setSelectedColor(colorId)}
-              onSizeChange={setSelectedSize}
+              setSelectedSize={setSelectedSize}
               onBack={closeProduct}
-              onAdd={() =>
-                selectedSize && addToBag(product.id, activeMaterial.id, activeColor.id, selectedSize)
-              }
+              onAdd={() => selectedSize && addToBag(product.id, selectedSize)}
             />
           </MotionDiv>
         )}
@@ -2242,25 +2201,36 @@ function Navigation({ scrolled, dark, bagCount, onBag, onHome }) {
 function Hero() {
   return (
     <section className="hero">
-      <img className="hero-bg" src="/wai4-opt.jpeg" alt="Vehon Mokassin in einer ruhigen Interior-Szene" />
+      <img
+        className="hero-bg"
+        src="/wai4-opt.jpeg"
+        alt="Vehon Mokassin in einer ruhigen Interior-Szene"
+      />
       <div className="hero-content">
         <div className="hero-copy">
-          <p className="eyebrow"><span className="wordmark">Vehon</span> · Vol. 01 · Made in Italy</p>
-          <h1><em>Vis et honor.</em></h1>
+          <p className="eyebrow">
+            <span className="wordmark">Vehon</span> · Vol. 01 · Made in Italy
+          </p>
+          <h1>Spürbare Eleganz</h1>
           <p className="hero-text">
-            Forza e onore — Stärke und Ehre. Ein lateinischer Leitsatz der römischen Legionäre, übersetzt
-            in zwei italienische Schuh-Silhouetten. Der <strong>Mocassino</strong> für draußen, der
-            <strong> Pantofola</strong> für drinnen — beide aus den feinsten Materialien, von Cashmere
-            und Velvet bis zur technischen Lycra.
+            Zwei italienische Schuh-Silhouetten, gefertigt aus feinsten
+            Materialien: der <strong>Mocassino</strong> für draußen, die{" "}
+            <strong>Pantofola</strong> für drinnen — von Cashmere und Velvet bis
+            zur technischen Lycra. Komplett Made in Italy.
           </p>
           <div className="hero-actions">
-            <a className="primary-btn" href="#shop">Shop Collection</a>
-            <a className="secondary-btn" href="#story">The Vehon story</a>
+            <a className="primary-btn" href="#shop">
+              Shop Collection
+            </a>
+            <a className="secondary-btn" href="#story">
+              The Vehon story
+            </a>
           </div>
         </div>
         <p className="hero-proof">
-          Komplett Made in Italy. Cashmere · Velvet · Wolle · Eco Suede · Vetech.
-          Eine Schuh-Familie mit zwei Gesichtern — Komfort und Würde, in jeder Bewegung.
+          Komplett Made in Italy. Cashmere · Velvet · Wolle · Eco Suede ·
+          Vetech. Eine Schuh-Familie mit zwei Gesichtern — Komfort und Würde, in
+          jeder Bewegung.
         </p>
       </div>
     </section>
@@ -2268,144 +2238,80 @@ function Hero() {
 }
 
 
-function Shop({ products, filter, setFilter, selectedModel, setSelectedModel, onOpen }) {
-  const product = products.find((p) => p.id === selectedModel) || products[0];
-  const visibleMaterials =
-    filter === "all"
-      ? product.materials
-      : product.materials.filter((material) => material.category === filter);
+function Shop({ products, filter, setFilter, onOpen, onQuickAdd }) {
+  const filters = [
+    ["all", "All"],
+    ["home", "Home"],
+    ["travel", "Travel"],
+    ["tech", "Flex"],
+  ];
 
   return (
     <section className="section" id="shop">
       <div className="section-inner">
-        <div className="section-head section-head--centered">
+        <div className="section-head">
           <div>
-            <p className="eyebrow">Vehon · Vol. 01</p>
-            <h2>Two silhouettes.<br />One Italian craft.</h2>
+            <p className="eyebrow">WAI Collection</p>
+            <h2>Clean shapes. Real comfort.</h2>
             <p className="section-note">
-              Wähle dein Modell — beide aus den gleichen sorgsam ausgewählten Materialien.
-              Komplett Made in Italy.
+              Der Shop setzt die Produktbilder größer, klarer und ruhiger ein. Kein lauter Katalog,
+              sondern eine kompakte Auswahl mit Fokus auf Material, Bewegung und Alltag.
             </p>
+          </div>
+          <div className="filters" role="tablist" aria-label="Produkte filtern">
+            {filters.map(([key, label]) => (
+              <button
+                className={`filter${filter === key ? " active" : ""}`}
+                key={key}
+                onClick={() => setFilter(key)}
+                type="button"
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
 
-        <div className="model-switcher" role="tablist" aria-label="Silhouette wählen">
-          {products.map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              role="tab"
-              aria-selected={p.id === selectedModel}
-              className={`model-tab${p.id === selectedModel ? " active" : ""}`}
-              onClick={() => setSelectedModel(p.id)}
+        <div className="shop-grid">
+          {products.map((product, index) => (
+            <article
+              className="product-card"
+              key={product.id}
+              onClick={() => onOpen(product.id)}
+              style={{ animationDelay: `${index * 70}ms` }}
             >
-              <span className="model-tab-name">{p.name}</span>
-              <span className="model-tab-sub">{p.tagline.split(" · ")[0]}</span>
-            </button>
-          ))}
-        </div>
-
-        <AnimatePresence mode="wait" initial={false}>
-          <MotionDiv
-            key={product.id}
-            className="model-stage"
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="editorial-hero">
-              <div className="editorial-hero-media">
+              <div className="product-media">
                 {product.tag && <span className="product-tag">{product.tag}</span>}
-                <img src={product.image} alt={product.name} />
+                <img className="main-img" src={product.image} alt={product.name} />
+                <img className="hover-img" src={product.hoverImage} alt="" aria-hidden="true" />
+                <button
+                  className="quick-add"
+                  type="button"
+                  aria-label={`${product.name} schnell in den Warenkorb legen`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onQuickAdd(product.id);
+                  }}
+                >
+                  +
+                </button>
               </div>
-              <div className="editorial-hero-body">
-                <p className="eyebrow">{product.subtitle}</p>
-                <h3>{product.name}</h3>
-                <p className="editorial-tagline">{product.tagline}</p>
-                <p className="editorial-intro">{product.intro}</p>
-                <ul className="editorial-highlights">
-                  {product.highlights.map((line) => (
-                    <li key={line}>{line}</li>
-                  ))}
-                </ul>
-                <div className="editorial-meta">
-                  <span><strong>EUR {product.price}</strong></span>
-                  <span className="editorial-meta-divider" aria-hidden="true">·</span>
-                  <span>EU {product.sizes[0]}–{product.sizes[product.sizes.length - 1]}</span>
-                  <span className="editorial-meta-divider" aria-hidden="true">·</span>
-                  <span>{product.materials.length} Materialien</span>
+              <div className="product-info">
+                <div className="product-title-row">
+                  <div>
+                    <h3 className="product-name">{product.name}</h3>
+                    <p className="product-sub">{product.subtitle} · {product.color}</p>
+                  </div>
+                  <span className="price">EUR {product.price}</span>
+                </div>
+                <div className="product-meta">
+                  <span>{product.material}</span>
+                  <span>EU {product.sizes[0]}-{product.sizes[product.sizes.length - 1]}</span>
                 </div>
               </div>
-            </div>
-
-            <div className="shop-filters-bar">
-              <p className="eyebrow">Choose your material</p>
-              <div className="filters" role="tablist" aria-label="Nach Material filtern">
-                {MATERIAL_FILTERS.map(([key, label]) => (
-                  <button
-                    className={`filter${filter === key ? " active" : ""}`}
-                    key={key}
-                    onClick={() => setFilter(key)}
-                    type="button"
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="shop-grid">
-              {visibleMaterials.map((material, idx) => (
-                <article
-                  className="product-card"
-                  key={`${product.id}-${material.id}`}
-                  onClick={() => onOpen(product.id, material.id)}
-                  style={{ animationDelay: `${idx * 60}ms` }}
-                >
-                  <div className="product-media">
-                    {product.tag && <span className="product-tag">{product.tag}</span>}
-                    <span
-                      className="material-stripe"
-                      style={{ background: material.colors[0].hex }}
-                      aria-hidden="true"
-                    />
-                    <img className="main-img" src={product.image} alt={`${product.name} in ${material.name}`} />
-                    <img className="hover-img" src={product.hoverImage} alt="" aria-hidden="true" />
-                  </div>
-                  <div className="product-info">
-                    <div className="product-title-row">
-                      <div>
-                        <h3 className="product-name">{material.name}</h3>
-                        <p className="product-sub">{material.description.split(" — ")[0]}</p>
-                      </div>
-                      <span className="price">EUR {product.price}</span>
-                    </div>
-                    <div className="swatch-row" aria-label={`Verfügbare Farben für ${material.name}`}>
-                      {material.colors.map((color) => (
-                        <button
-                          key={color.id}
-                          type="button"
-                          className="swatch swatch--card"
-                          style={{ background: color.hex }}
-                          aria-label={color.name}
-                          title={color.name}
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            onOpen(product.id, material.id, color.id);
-                          }}
-                        />
-                      ))}
-                      <span className="swatch-more">
-                        {material.colors.length} {material.colors.length === 1 ? "color" : "colors"}
-                      </span>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </MotionDiv>
-        </AnimatePresence>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -2695,116 +2601,42 @@ function InfoSections() {
   );
 }
 
-function ProductDetail({
-  product,
-  activeMaterial,
-  activeColor,
-  selectedSize,
-  onMaterialChange,
-  onColorChange,
-  onSizeChange,
-  onBack,
-  onAdd,
-}) {
+function ProductDetail({ product, selectedSize, setSelectedSize, onBack, onAdd }) {
   return (
     <main className="detail">
       <div className="detail-grid">
         <div className="detail-media">
           <img src={product.hoverImage || product.image} alt={product.name} />
-          <div
-            className="detail-color-bar"
-            style={{ background: activeColor.hex }}
-            aria-hidden="true"
-          />
         </div>
         <div className="detail-panel">
           <button className="back" type="button" onClick={onBack}>
             <span aria-hidden="true">←</span>
             Back to shop
           </button>
-          <p className="eyebrow">Vehon · Made in Italy</p>
+          <p className="eyebrow">{product.material}</p>
           <h1>{product.name}</h1>
-          <p className="detail-sub">
-            {product.subtitle} · {activeMaterial.name} · {activeColor.name}
-          </p>
+          <p className="detail-sub">{product.subtitle} · {product.color}</p>
           <div className="detail-price">EUR {product.price}</div>
 
-          <div className="picker">
-            <div className="picker-label">
-              <span>Material</span>
-              <span className="picker-value">{activeMaterial.name}</span>
-            </div>
-            <div className="material-grid">
-              {product.materials.map((material) => {
-                const isActive = material.id === activeMaterial.id;
-                return (
-                  <button
-                    key={material.id}
-                    type="button"
-                    className={`material-chip${isActive ? " active" : ""}`}
-                    onClick={() => onMaterialChange(material.id)}
-                  >
-                    <span
-                      className="material-chip-swatch"
-                      style={{ background: material.colors[0].hex }}
-                      aria-hidden="true"
-                    />
-                    <span className="material-chip-label">{material.short}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="picker">
-            <div className="picker-label">
-              <span>Color</span>
-              <span className="picker-value">{activeColor.name}</span>
-            </div>
-            <div className="color-row">
-              {activeMaterial.colors.map((color) => {
-                const isActive = color.id === activeColor.id;
-                return (
-                  <button
-                    key={color.id}
-                    type="button"
-                    className={`swatch swatch--detail${isActive ? " active" : ""}`}
-                    style={{ background: color.hex }}
-                    aria-label={color.name}
-                    title={color.name}
-                    onClick={() => onColorChange(color.id)}
-                  />
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="picker">
-            <div className="picker-label">
-              <span>Size</span>
-              <span className="picker-value">{selectedSize ? `EU ${selectedSize}` : "—"}</span>
-            </div>
-            <div className="sizes">
-              {product.sizes.map((size) => (
-                <button
-                  className={`size${selectedSize === size ? " active" : ""}`}
-                  key={size}
-                  type="button"
-                  onClick={() => onSizeChange(size)}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
+          <div className="size-label">Select size</div>
+          <div className="sizes">
+            {product.sizes.map((size) => (
+              <button
+                className={`size${selectedSize === size ? " active" : ""}`}
+                key={size}
+                type="button"
+                onClick={() => setSelectedSize(size)}
+              >
+                {size}
+              </button>
+            ))}
           </div>
 
           <button className="add-to-bag" type="button" disabled={!selectedSize} onClick={onAdd}>
-            {selectedSize ? "Add to Bag" : "Select size"}
+            Add to Bag
           </button>
 
-          <p className="detail-copy">
-            <strong>{activeMaterial.name}.</strong> {activeMaterial.description} {product.detailIntro}
-          </p>
+          <p className="detail-copy">{product.description}</p>
         </div>
       </div>
     </main>
